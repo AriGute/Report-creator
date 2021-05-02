@@ -1,13 +1,25 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:save_pdf/pages/home.dart';
-import 'package:save_pdf/pages/loading.dart';
-import 'package:save_pdf/pages/choose_location.dart';
+import 'package:provider/provider.dart';
+import 'package:save_pdf/pages/models/user.dart';
+import 'package:save_pdf/pages/wrapper.dart';
+import 'package:save_pdf/services/auth.dart';
 
-void main() => runApp(MaterialApp(
-      initialRoute: '/',
-      routes: {
-        '/': (context) => Loading(),
-        '/home': (context) => Home(),
-        '/location': (contest) => ChooseLocation()
-      },
-    ));
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return StreamProvider<MyUser>.value(
+      value: AuthService().user,
+      initialData: null,
+      child: MaterialApp(
+        home: Wrapper(),
+      ),
+    );
+  }
+}

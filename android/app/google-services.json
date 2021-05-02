@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1023625195877",
+    "project_id": "barak-c67a8",
+    "storage_bucket": "barak-c67a8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1023625195877:android:21c12777110055baf1b18c",
+        "android_client_info": {
+          "package_name": "com.barak.save_pdf"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1023625195877-pfmg9sui384626nmbunmp5trqdjc7ahu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBANVusUzxMjB_kCwQ-ycrEY7uxU3QizSQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1023625195877-pfmg9sui384626nmbunmp5trqdjc7ahu.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
