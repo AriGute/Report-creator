@@ -7,6 +7,10 @@ import 'package:save_pdf/services/database.dart';
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
+  String getUid() {
+    return _auth.currentUser.uid;
+  }
+
   // create user obj based on Firebase User
   MyUser _userFromFirebaseUser(User user) {
     return user != null ? MyUser(uid: user.uid) : null;
@@ -36,6 +40,7 @@ class AuthService {
       UserCredential result = await _auth.signInWithEmailAndPassword(
           email: email, password: password);
       User user = result.user;
+      // await DatabaseService(uid: user.uid).addReport();
 
       return _userFromFirebaseUser(user);
     } catch (e) {
@@ -49,7 +54,7 @@ class AuthService {
       UserCredential result = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
       User user = result.user;
-      await DatabaseService(uid: user.uid).createUserDocs();
+      // await DatabaseService(uid: user.uid).createUserReports();
       return _userFromFirebaseUser(user);
     } catch (e) {
       print(e.toString());
