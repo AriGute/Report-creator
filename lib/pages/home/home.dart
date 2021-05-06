@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:save_pdf/pages/home/docs_list.dart';
-import 'package:save_pdf/pages/home/report_form.dart';
+import 'package:save_pdf/pages/home/report_form/report_form_page.dart';
 import 'package:save_pdf/pages/home/settings_form.dart';
 import 'package:save_pdf/pages/models/report.dart';
 import 'package:save_pdf/services/auth.dart';
