@@ -1,8 +1,13 @@
+// import 'dart:html';
+
 import 'package:flutter/material.dart';
 import 'package:save_pdf/pages/home/docs_list.dart';
+import 'package:save_pdf/pages/home/profile_bar.dart';
 import 'package:save_pdf/pages/home/report_form/report_form_page.dart';
-import 'package:save_pdf/pages/home/settings_form.dart';
+import 'package:save_pdf/pages/home/side_window.dart';
 import 'package:save_pdf/pages/models/report.dart';
+import 'package:save_pdf/pages/profile_Settings.dart';
+import 'package:save_pdf/pages/shared/constants.dart';
 import 'package:save_pdf/services/auth.dart';
 import 'package:save_pdf/services/database.dart';
 import 'package:provider/provider.dart';
@@ -18,10 +23,7 @@ class Home extends StatelessWidget {
       showModalBottomSheet(
           context: context,
           builder: (context) {
-            return Container(
-              padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 60.0),
-              child: SettingsForm(),
-            );
+            return profileSettings(_auth, context);
           });
     }
 
@@ -32,26 +34,15 @@ class Home extends StatelessWidget {
         backgroundColor: Colors.white,
         appBar: AppBar(
           backgroundColor: Colors.red[500],
-          title: Text(
-            'Main Page:',
-            style: TextStyle(color: appBarTextColor),
+          title: Expanded(
+            child: Text(
+              'Main Page:',
+              style: TextStyle(color: appBarTextColor),
+            ),
           ),
           centerTitle: false,
           elevation: 0.0,
           actions: <Widget>[
-            FlatButton.icon(
-              onPressed: () async {
-                await _auth.signOut();
-              },
-              icon: Icon(
-                Icons.person,
-                color: appBarTextColor,
-              ),
-              label: Text(
-                'Log out',
-                style: TextStyle(color: appBarTextColor),
-              ),
-            ),
             FlatButton.icon(
               onPressed: () => _showSettingsPanel(),
               icon: Icon(
@@ -62,10 +53,21 @@ class Home extends StatelessWidget {
                 'Settings',
                 style: TextStyle(color: appBarTextColor),
               ),
-            )
+            ),
           ],
         ),
-        body: DocsList(),
+        drawer: Drawer(
+          child: ListView(
+            children: [sideWindows()],
+          ),
+        ),
+        body: Column(children: <Widget>[
+          SizedBox(
+            height: boxSize,
+          ),
+          Container(color: Colors.red[500], child: ProfileBar()),
+          Expanded(child: DocsList())
+        ]),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
             print("add report");

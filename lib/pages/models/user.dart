@@ -1,5 +1,6 @@
 class MyUser {
   final String uid;
-
-  MyUser({this.uid});
+  final String firstName;
+  final String lastName;
+  MyUser({this.uid, this.firstName, this.lastName});
 }

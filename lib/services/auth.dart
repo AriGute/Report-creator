@@ -13,7 +13,11 @@ class AuthService {
 
   // create user obj based on Firebase User
   MyUser _userFromFirebaseUser(User user) {
-    return user != null ? MyUser(uid: user.uid) : null;
+    return user != null
+        ? MyUser(
+            uid: user.uid,
+          )
+        : null;
   }
 
   // auth change user stream
@@ -25,7 +29,7 @@ class AuthService {
   Future signInAnon() async {
     try {
       UserCredential result = await _auth.signInAnonymously();
-
+      // DatabaseService extraDetails = await DatabaseService(uid: result.user.uid);
       User user = result.user;
       return _userFromFirebaseUser(user);
     } catch (e) {
@@ -40,8 +44,10 @@ class AuthService {
       UserCredential result = await _auth.signInWithEmailAndPassword(
           email: email, password: password);
       User user = result.user;
-      // await DatabaseService(uid: user.uid).addReport();
 
+      print("<[auth => signInWithEmailAndPassword, result: " +
+          result.user.toString() +
+          "]>");
       return _userFromFirebaseUser(user);
     } catch (e) {
       print(e.toString());
@@ -49,12 +55,13 @@ class AuthService {
   }
 
   //register with email & password
-  Future registerWithEmailAndPassword(String email, String password) async {
+  Future registerWithEmailAndPassword(
+      String email, String password, String firstName, String lastName) async {
     try {
       UserCredential result = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
       User user = result.user;
-      // await DatabaseService(uid: user.uid).createUserReports();
+      await DatabaseService(uid: user.uid).setUserDetails(firstName, lastName);
       return _userFromFirebaseUser(user);
     } catch (e) {
       print(e.toString());

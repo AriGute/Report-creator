@@ -21,6 +21,9 @@ class _RegisterState extends State<Register> {
   // text field state
   String email = '';
   String password = '';
+  String firstName = '';
+  String lastName = '';
+
   String error = '';
 
   @override
@@ -85,6 +88,28 @@ class _RegisterState extends State<Register> {
                     SizedBox(
                       height: boxSize,
                     ),
+                    TextFormField(
+                      decoration:
+                          textIputDecoration.copyWith(hintText: 'First Name'),
+                      validator: (val) => val.length < 0 ? 'Enter name' : null,
+                      onChanged: (val) {
+                        firstName = val;
+                      },
+                    ),
+                    SizedBox(
+                      height: boxSize,
+                    ),
+                    TextFormField(
+                      decoration:
+                          textIputDecoration.copyWith(hintText: 'Last Name'),
+                      validator: (val) => val.length < 0 ? 'Enter name' : null,
+                      onChanged: (val) {
+                        lastName = val;
+                      },
+                    ),
+                    SizedBox(
+                      height: boxSize,
+                    ),
                     RaisedButton(
                       onPressed: () async {
                         if (_formKey.currentState.validate()) {
@@ -92,8 +117,9 @@ class _RegisterState extends State<Register> {
                             isLoading = true;
                           });
                           print("Email: $email, Passowrd: $password");
-                          dynamic result = await _auth
-                              .registerWithEmailAndPassword(email, password);
+                          dynamic result =
+                              await _auth.registerWithEmailAndPassword(
+                                  email, password, firstName, lastName);
                           if (result == null) {
                             setState(() {
                               isLoading = false;
