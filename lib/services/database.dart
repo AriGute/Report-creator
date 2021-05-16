@@ -38,12 +38,38 @@ class DatabaseService {
     return reportsDb.snapshots().map(_reportListFromSnapShot);
   }
 
+  List<Map> _userDetailsFromSnapShot(QuerySnapshot snapshot) {
+    print("<[database.dart => _reportListFromSnapShot]>");
+    return snapshot.docs.map((doc) {
+      print(doc.data());
+      return {
+        "firstName": doc.data()["first_name"],
+        "lastName": doc.data()["last_name"],
+        "isManager": doc.data()["is_manager"]
+      };
+    }).toList();
+  }
+
+  Stream<List<Map>> getUserDetails() {
+    print("<[database.dart => getUserDetails]>");
+    print("docs UID: $uid");
+    final CollectionReference reportsDb = db.doc(uid).collection("userDetails");
+    print(reportsDb);
+    return reportsDb.snapshots().map(_userDetailsFromSnapShot);
+  }
+
   // add reports to exist user
   Future addReport() async {
     return await db.doc(uid).collection('Reports').add({
       'date': "0",
       'name': 'ariel test',
-      'anotherThing': 'some other thing'
+      'anotherThing': 'some other thing',
     });
+  }
+
+  // add user details to exist user
+  Future setUserDetails(String firstName, String lastName) async {
+    return await db.doc(uid).collection('userDetails').add(
+        {'first_name': firstName, 'last_name': lastName, 'is_manager': false});
   }
 }
