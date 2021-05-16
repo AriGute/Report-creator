@@ -1,16 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:save_pdf/pages/models/report.dart';
-import 'package:save_pdf/services/database.dart';
-
-Future<Map> getDetails() async {
-  Stream<List<Map>> details = DatabaseService().getUserDetails();
-  details.forEach((item) {
-    print("user details: " + item.toString());
-  });
-}
+import 'package:save_pdf/pages/shared/constants.dart';
 
 class ProfileBar extends StatefulWidget {
+  Stream<List<Map>> userDetails;
+  String firstName = '';
+  bool isManager = false;
+  Widget managerBaget = Spacer();
+  ProfileBar({this.userDetails});
   @override
   _ProfileBarState createState() => _ProfileBarState();
 }
@@ -18,21 +14,38 @@ class ProfileBar extends StatefulWidget {
 class _ProfileBarState extends State<ProfileBar> {
   @override
   Widget build(BuildContext context) {
-    final details = Provider.of<List<Report>>(context);
-    print(details);
+    widget.userDetails.listen((event) {
+      event.forEach((element) {
+        widget.firstName = element["firstName"];
+        if (element["isManager"]) {
+          widget.managerBaget = Icon(
+            Icons.badge,
+            color: Colors.white,
+          );
+        } else {
+          widget.managerBaget = Icon(
+            Icons.account_circle,
+            color: Colors.white,
+          );
+        }
+        setState(() {});
+        print(element["firstName"]);
+      });
+    });
+
     return Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
           Spacer(),
           Text(
-            'Name',
+            widget.firstName,
             style: TextStyle(color: Colors.white),
           ),
-          Spacer(),
-          FlatButton.icon(
-              onPressed: () => getDetails(),
-              icon: Icon(Icons.ac_unit),
-              label: Text("data"))
+          SizedBox(
+            width: 10,
+          ),
+          widget.managerBaget,
+          Spacer()
         ]);
   }
 }

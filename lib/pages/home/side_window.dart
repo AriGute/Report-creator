@@ -1,5 +1,12 @@
 import 'package:flutter/material.dart';
 
 Widget sideWindows() {
-  return Container(child: Text("side windows:"));
+  return Scaffold(
+    appBar: AppBar(
+      backgroundColor: Colors.red[500],
+    ),
+    body: ListView(
+      children: [Container(child: Text("side windows:"))],
+    ),
+  );
 }

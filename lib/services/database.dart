@@ -40,11 +40,12 @@ class DatabaseService {
 
   List<Map> _userDetailsFromSnapShot(QuerySnapshot snapshot) {
     print("<[database.dart => _reportListFromSnapShot]>");
-    print("UID: $uid, snapshot: $snapshot");
     return snapshot.docs.map((doc) {
+      print(doc.data());
       return {
-        "firstName": doc.data()["firstName"],
-        "lastName": doc.data()["lastName"]
+        "firstName": doc.data()["first_name"],
+        "lastName": doc.data()["last_name"],
+        "isManager": doc.data()["is_manager"]
       };
     }).toList();
   }
@@ -62,15 +63,13 @@ class DatabaseService {
     return await db.doc(uid).collection('Reports').add({
       'date': "0",
       'name': 'ariel test',
-      'anotherThing': 'some other thing'
+      'anotherThing': 'some other thing',
     });
   }
 
   // add user details to exist user
   Future setUserDetails(String firstName, String lastName) async {
-    return await db
-        .doc(uid)
-        .collection('userDetails')
-        .add({'first_name': firstName, 'last_name': lastName});
+    return await db.doc(uid).collection('userDetails').add(
+        {'first_name': firstName, 'last_name': lastName, 'is_manager': false});
   }
 }

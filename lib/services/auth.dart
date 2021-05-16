@@ -13,6 +13,7 @@ class AuthService {
 
   // create user obj based on Firebase User
   MyUser _userFromFirebaseUser(User user) {
+    print("user:  $user");
     return user != null
         ? MyUser(
             uid: user.uid,
@@ -61,6 +62,7 @@ class AuthService {
       UserCredential result = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
       User user = result.user;
+
       await DatabaseService(uid: user.uid).setUserDetails(firstName, lastName);
       return _userFromFirebaseUser(user);
     } catch (e) {

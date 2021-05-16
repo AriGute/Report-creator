@@ -1,5 +1,3 @@
-// import 'dart:html';
-
 import 'package:flutter/material.dart';
 import 'package:save_pdf/pages/home/docs_list.dart';
 import 'package:save_pdf/pages/home/profile_bar.dart';
@@ -43,29 +41,24 @@ class Home extends StatelessWidget {
           centerTitle: false,
           elevation: 0.0,
           actions: <Widget>[
-            FlatButton.icon(
-              onPressed: () => _showSettingsPanel(),
-              icon: Icon(
-                Icons.settings,
-                color: appBarTextColor,
-              ),
-              label: Text(
-                'Settings',
-                style: TextStyle(color: appBarTextColor),
-              ),
-            ),
+            IconButton(
+                icon: Icon(
+                  Icons.settings,
+                  color: appBarTextColor,
+                ),
+                onPressed: () => _showSettingsPanel()),
           ],
         ),
-        drawer: Drawer(
-          child: ListView(
-            children: [sideWindows()],
-          ),
-        ),
+        drawer: Drawer(child: sideWindows()),
         body: Column(children: <Widget>[
           SizedBox(
             height: boxSize,
           ),
-          Container(color: Colors.red[500], child: ProfileBar()),
+          Container(
+              color: Colors.red[500],
+              child: ProfileBar(
+                  userDetails:
+                      DatabaseService(uid: _auth.getUid()).getUserDetails())),
           Expanded(child: DocsList())
         ]),
         floatingActionButton: FloatingActionButton(
