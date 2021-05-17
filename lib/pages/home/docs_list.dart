@@ -4,30 +4,29 @@ import 'package:save_pdf/pages/home/report_tile.dart';
 import 'package:save_pdf/pages/models/report.dart';
 
 class DocsList extends StatefulWidget {
+  Widget docs = Text("Loading reports...");
   @override
   _DocsListState createState() => _DocsListState();
 }
 
 class _DocsListState extends State<DocsList> {
+  Future getWidget() async {
+    final reportList = await Provider.of<List<Report>>(context);
+    if (reportList.length > 0) {
+      widget.docs = ListView.builder(
+          itemCount: reportList.length,
+          itemBuilder: (context, index) {
+            return ReportTile(report: reportList[index]);
+          });
+    } else {
+      widget.docs = Text("No reports found.");
+    }
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
-    final reportList = Provider.of<List<Report>>(context);
-    print('<[docs_list.dart => _DocsListState]>');
-    if (reportList != null) {
-      print("reports:  $reportList");
-
-      reportList.forEach((report) {
-        print(report.name);
-        print(report.date);
-        print(report.anotherThing);
-      });
-    } else {
-      print('list is null');
-    }
-    return ListView.builder(
-        itemCount: reportList.length,
-        itemBuilder: (context, index) {
-          return ReportTile(report: reportList[index]);
-        });
+    getWidget();
+    return widget.docs;
   }
 }

@@ -53,8 +53,8 @@ class DatabaseService {
   Stream<List<Map>> getUserDetails() {
     print("<[database.dart => getUserDetails]>");
     print("docs UID: $uid");
+    print("start");
     final CollectionReference reportsDb = db.doc(uid).collection("userDetails");
-    print(reportsDb);
     return reportsDb.snapshots().map(_userDetailsFromSnapShot);
   }
 

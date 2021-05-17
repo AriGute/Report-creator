@@ -12,11 +12,13 @@ import 'package:provider/provider.dart';
 
 class Home extends StatelessWidget {
   final AuthService _auth = AuthService();
-
-  Color appBarTextColor = Colors.white;
+  Stream<List<Map>> profile;
 
   @override
   Widget build(BuildContext context) {
+    // profile = DatabaseService(uid: _auth.getUid()).getUserDetails();
+    // profile = DatabaseService(uid: _auth.getUid()).getUserDetails();
+
     void _showSettingsPanel() {
       showModalBottomSheet(
           context: context,
@@ -25,9 +27,16 @@ class Home extends StatelessWidget {
           });
     }
 
-    return StreamProvider<List<Report>>.value(
-      value: DatabaseService(uid: _auth.getUid()).docs(),
-      initialData: [],
+    return MultiProvider(
+      // value: DatabaseService(uid: _auth.getUid()).docs(),
+      providers: [
+        StreamProvider(
+            create: (BuildContext context) =>
+                DatabaseService(uid: _auth.getUid()).docs()),
+        StreamProvider(
+            create: (BuildContext context) =>
+                DatabaseService(uid: _auth.getUid()).getUserDetails())
+      ],
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
@@ -35,7 +44,7 @@ class Home extends StatelessWidget {
           title: Expanded(
             child: Text(
               'Main Page:',
-              style: TextStyle(color: appBarTextColor),
+              style: TextStyle(color: Colors.white),
             ),
           ),
           centerTitle: false,
@@ -44,21 +53,17 @@ class Home extends StatelessWidget {
             IconButton(
                 icon: Icon(
                   Icons.settings,
-                  color: appBarTextColor,
+                  color: Colors.white,
                 ),
                 onPressed: () => _showSettingsPanel()),
           ],
         ),
-        drawer: Drawer(child: sideWindows()),
+        drawer: Drawer(child: SideWindows(profile: this.profile)),
         body: Column(children: <Widget>[
           SizedBox(
             height: boxSize,
           ),
-          Container(
-              color: Colors.red[500],
-              child: ProfileBar(
-                  userDetails:
-                      DatabaseService(uid: _auth.getUid()).getUserDetails())),
+          Container(color: Colors.red[500], child: ProfileBar()),
           Expanded(child: DocsList())
         ]),
         floatingActionButton: FloatingActionButton(
