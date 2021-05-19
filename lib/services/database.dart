@@ -38,19 +38,23 @@ class DatabaseService {
     return reportsDb.snapshots().map(_reportListFromSnapShot);
   }
 
-  List<Map> _userDetailsFromSnapShot(QuerySnapshot snapshot) {
+  Map _userDetailsFromSnapShot(QuerySnapshot snapshot) {
     print("<[database.dart => _reportListFromSnapShot]>");
-    return snapshot.docs.map((doc) {
-      print(doc.data());
-      return {
-        "firstName": doc.data()["first_name"],
-        "lastName": doc.data()["last_name"],
-        "isManager": doc.data()["is_manager"]
-      };
-    }).toList();
+    return snapshot.docs
+        .map((doc) {
+          print(doc.data());
+          return {
+            "firstName": doc.data()["first_name"],
+            "lastName": doc.data()["last_name"],
+            "isManager": doc.data()["is_manager"]
+          };
+        })
+        .toList()
+        .first;
   }
 
-  Stream<List<Map>> getUserDetails() {
+  // get stream of specific user details collection from firebase
+  Stream<Map> getUserDetails() {
     print("<[database.dart => getUserDetails]>");
     print("docs UID: $uid");
     print("start");

@@ -13,9 +13,9 @@ class ProfileBar extends StatefulWidget {
 
 class _ProfileBarState extends State<ProfileBar> {
   Future getWidget() async {
-    final Map reportList = Provider.of<List<Map>>(context).first;
-    widget.firstName = reportList["firstName"] + " " + reportList["lastName"];
-    if (reportList["isManager"]) {
+    final Map userDetails = Provider.of<Map>(context);
+    widget.firstName = userDetails["firstName"] + " " + userDetails["lastName"];
+    if (userDetails["isManager"]) {
       widget.managerBaget = Icon(
         Icons.badge,
         color: Colors.white,

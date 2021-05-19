@@ -5,6 +5,7 @@ import 'package:save_pdf/pages/shared/constants.dart';
 class BaseReport extends StatefulWidget {
   BaseForm report;
   BaseReport({this.report});
+  bool castumAssigment = false;
   @override
   _BaseReportState createState() => _BaseReportState();
 }
