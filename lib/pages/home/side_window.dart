@@ -1,7 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:save_pdf/pages/home/create_assignment/create_assignment_form.dart';
 import 'package:save_pdf/pages/models/report.dart';
+import 'package:save_pdf/services/database.dart';
 
 class SideWindows extends StatefulWidget {
   List<Widget> widgetList = [];
@@ -32,12 +34,12 @@ class _SideWindowsState extends State<SideWindows> {
   @override
   Widget build(BuildContext context) {
     Future setWidgets() async {
-      final Map userDetails = Provider.of<Map>(context);
-      print(userDetails);
+      final Map userDetails = Provider.of<DocumentSnapshot>(context).data();
+
       widget.widgetList.add(setTextButton(() {
         print("testing button");
       }, "test"));
-      if (userDetails["isManager"]) {
+      if (userDetails["is_manager"]) {
         widget.widgetList.add(setTextButton(() {
           Navigator.push(
             widget.homeContext,

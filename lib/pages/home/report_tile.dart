@@ -19,9 +19,7 @@ class ReportTile extends StatelessWidget {
           ),
           title: Text(report.date),
           subtitle: Text(report.name),
-          onTap: () {
-            print("Press: ${report.name}");
-          },
+          onTap: () {},
         ),
         color: Colors.grey[400],
       ),

@@ -7,6 +7,7 @@ class DatabaseService {
   DatabaseService({this.uid});
   //collection refrence
   final CollectionReference db = FirebaseFirestore.instance.collection('Users');
+  final FirebaseFirestore fb = FirebaseFirestore.instance;
 
   // create uniqe user docs library
   Future createUserReports() async {
@@ -19,8 +20,6 @@ class DatabaseService {
 
   // get report doc list from snapshot
   List<Report> _reportListFromSnapShot(QuerySnapshot snapshot) {
-    print("<[database.dart => _reportListFromSnapShot]>");
-    // print("UID: $uid");
     return snapshot.docs.map((doc) {
       return Report(
           date: doc.data()['date'] ?? '',
@@ -31,49 +30,57 @@ class DatabaseService {
 
   // get reports that belong to exist user
   Stream<List<Report>> docs() {
-    print("<[database.dart => docs]>");
-    print("docs UID: $uid");
     final CollectionReference reportsDb = db.doc(uid).collection("Reports");
-    print(reportsDb);
     return reportsDb.snapshots().map(_reportListFromSnapShot);
   }
 
-  Map _userDetailsFromSnapShot(QuerySnapshot snapshot) {
-    print("<[database.dart => _reportListFromSnapShot]>");
-    return snapshot.docs
-        .map((doc) {
-          print(doc.data());
-          return {
-            "firstName": doc.data()["first_name"],
-            "lastName": doc.data()["last_name"],
-            "isManager": doc.data()["is_manager"]
-          };
-        })
-        .toList()
-        .first;
+  // get stream to user collection QuerySnapShot
+  Stream<QuerySnapshot> getUserCollection() {
+    return db.snapshots();
   }
 
-  // get stream of specific user details collection from firebase
-  Stream<Map> getUserDetails() {
-    print("<[database.dart => getUserDetails]>");
-    print("docs UID: $uid");
-    print("start");
-    final CollectionReference reportsDb = db.doc(uid).collection("userDetails");
-    return reportsDb.snapshots().map(_userDetailsFromSnapShot);
+  // get stream to current user DocumentSnapshot from users collection
+  Stream<DocumentSnapshot> getCurrentUserDetails() {
+    return db.doc(uid).snapshots();
+  }
+
+  // get stream to current user DocumentSnapshot from users collection
+  Future<Map> getUserDetails(String someUID) async {
+    // print("<[database.dart => getUserDetails]>");
+    Stream<DocumentSnapshot> temp = await db.doc(someUID).snapshots();
+    // print("temp2");
+    // Map stam = {};
+
+    await temp.first.then((value) {
+      return value.data();
+    });
+    return await temp.first.then((value) {
+      return value.data();
+    });
   }
 
   // add reports to exist user
   Future addReport() async {
     return await db.doc(uid).collection('Reports').add({
       'date': "0",
-      'name': 'ariel test',
+      'name': 'test',
       'anotherThing': 'some other thing',
     });
   }
 
   // add user details to exist user
-  Future setUserDetails(String firstName, String lastName) async {
-    return await db.doc(uid).collection('userDetails').add(
-        {'first_name': firstName, 'last_name': lastName, 'is_manager': false});
+  Future setUserDetails(String firstName, String lastName, String email) async {
+    return await db.doc(uid).set({
+      'first_name': firstName,
+      'last_name': lastName,
+      'is_manager': false,
+      "email": email
+    });
+    // return await db.doc(uid).collection('userDetails').add(
+    //     {'first_name': firstName, 'last_name': lastName, 'is_manager': false});
+  }
+
+  dynamic someFunc() {
+    dynamic users = db.doc();
   }
 }

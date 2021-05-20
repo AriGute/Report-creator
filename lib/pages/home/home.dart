@@ -29,7 +29,7 @@ class Home extends StatelessWidget {
                 DatabaseService(uid: _auth.getUid()).docs()),
         StreamProvider(
             create: (BuildContext context) =>
-                DatabaseService(uid: _auth.getUid()).getUserDetails())
+                DatabaseService(uid: _auth.getUid()).getCurrentUserDetails())
       ],
       child: Scaffold(
         backgroundColor: Colors.white,
@@ -65,7 +65,6 @@ class Home extends StatelessWidget {
         ]),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
-            print("add report");
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => ReportForm()),

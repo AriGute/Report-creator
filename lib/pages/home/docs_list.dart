@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:save_pdf/pages/home/report_tile.dart';
 import 'package:save_pdf/pages/models/report.dart';
+import 'package:save_pdf/pages/shared/loading.dart';
 
 class DocsList extends StatefulWidget {
-  Widget docs = Text("Loading reports...");
+  Widget docs = Loading();
   @override
   _DocsListState createState() => _DocsListState();
 }
