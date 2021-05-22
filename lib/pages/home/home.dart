@@ -66,7 +66,17 @@ class Home extends StatelessWidget {
             height: boxSize,
           ),
           Container(color: Colors.red[500], child: ProfileBar()),
+          // Expanded(child: DraggableScrollableSheet(
+          //   builder: (context, scrollController) {
+          //     return Container(
+          //       child: Column(children: [Text("data")
+          //       ],),
+          //     );
+          //   },
+          // ))
+
           Expanded(child: AssigmentList())
+
           // Expanded(child: DocsList())
         ]),
         floatingActionButton: FloatingActionButton(

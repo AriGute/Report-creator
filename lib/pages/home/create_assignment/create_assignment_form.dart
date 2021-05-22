@@ -138,11 +138,11 @@ class _AssignmentFormState extends State<AssignmentForm> {
         child: Text("test")));
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Create assigment"),
-        backgroundColor: Colors.red[500],
-      ),
-      body: Form(key: _formKey, child: Column(children: widget.switchList)),
-    );
+        appBar: AppBar(
+          title: Text("Create assigment"),
+          backgroundColor: Colors.red[500],
+        ),
+        body:
+            Form(key: _formKey, child: ListView(children: widget.switchList)));
   }
 }

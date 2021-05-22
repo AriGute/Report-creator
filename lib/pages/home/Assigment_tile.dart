@@ -20,7 +20,9 @@ class AssigmentTile extends StatelessWidget {
           ),
           title: Text(assigment.subject),
           subtitle: Text(assigment.date),
-          onTap: () {},
+          onTap: () {
+            print(assigment.uid);
+          },
         ),
         color: Colors.grey[400],
       ),
