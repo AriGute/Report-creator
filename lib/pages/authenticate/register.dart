@@ -39,7 +39,8 @@ class _RegisterState extends State<Register> {
               elevation: 0.0,
               title: Text('Sign up:'),
               actions: <Widget>[
-                FlatButton.icon(
+                ElevatedButton.icon(
+                  style: ElevatedButton.styleFrom(primary: Colors.redAccent),
                   onPressed: () {
                     widget.toggleView();
                   },
@@ -51,7 +52,7 @@ class _RegisterState extends State<Register> {
                     'Sign in',
                     style: TextStyle(color: appBarColor),
                   ),
-                )
+                ),
               ],
             ),
             body: Container(
@@ -110,29 +111,29 @@ class _RegisterState extends State<Register> {
                     SizedBox(
                       height: boxSize,
                     ),
-                    RaisedButton(
-                      onPressed: () async {
-                        if (_formKey.currentState.validate()) {
-                          setState(() {
-                            isLoading = true;
-                          });
-                          dynamic result =
-                              await _auth.registerWithEmailAndPassword(
-                                  email, password, firstName, lastName);
-                          if (result == null) {
+                    ElevatedButton(
+                        style:
+                            ElevatedButton.styleFrom(primary: Colors.red[500]),
+                        onPressed: () async {
+                          if (_formKey.currentState.validate()) {
                             setState(() {
-                              isLoading = false;
-                              error = 'Please supply a valid info';
+                              isLoading = true;
                             });
+                            dynamic result =
+                                await _auth.registerWithEmailAndPassword(
+                                    email, password, firstName, lastName);
+                            if (result == null) {
+                              setState(() {
+                                isLoading = false;
+                                error = 'Please supply a valid info';
+                              });
+                            }
                           }
-                        }
-                      },
-                      color: Colors.red[500],
-                      child: Text(
-                        'Register',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
+                        },
+                        child: Text(
+                          'Register',
+                          style: TextStyle(color: Colors.white),
+                        )),
                     SizedBox(height: boxSize),
                     Text(
                       error,

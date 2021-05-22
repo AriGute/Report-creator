@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:save_pdf/pages/models/assigment.dart';
 import 'package:save_pdf/pages/models/report.dart';
 
 class DatabaseService {
@@ -34,6 +35,22 @@ class DatabaseService {
     return reportsDb.snapshots().map(_reportListFromSnapShot);
   }
 
+  // get report doc list from snapshot
+  List<Assigment> _assigmentsListFromSnapShot(QuerySnapshot snapshot) {
+    return snapshot.docs.map((doc) {
+      return Assigment(
+          subject: doc.data()["subject"] ?? 'No subject',
+          date: doc.data()["date"] ?? '0/0/0',
+          uid: doc.id);
+    }).toList();
+  }
+
+  // get reports that belong to exist user
+  Stream<List<Assigment>> assigments() {
+    final CollectionReference reportsDb = db.doc(uid).collection("Assigments");
+    return reportsDb.snapshots().map(_assigmentsListFromSnapShot);
+  }
+
   // get stream to user collection QuerySnapShot
   Stream<QuerySnapshot> getUserCollection() {
     return db.snapshots();
@@ -46,11 +63,7 @@ class DatabaseService {
 
   // get stream to current user DocumentSnapshot from users collection
   Future<Map> getUserDetails(String someUID) async {
-    // print("<[database.dart => getUserDetails]>");
     Stream<DocumentSnapshot> temp = await db.doc(someUID).snapshots();
-    // print("temp2");
-    // Map stam = {};
-
     await temp.first.then((value) {
       return value.data();
     });
@@ -68,6 +81,23 @@ class DatabaseService {
     });
   }
 
+  // attatch assigment(map<string, bool> widget list indicator) to user
+  Future addAssigment(String uid, Map assigment, String subject) async {
+    Map<String, dynamic> assigmentExtend = {};
+    assigment.keys.forEach((key) {
+      assigmentExtend[key] = assigment[key];
+    });
+
+    assigmentExtend["subject"] = subject;
+
+    DateTime now = new DateTime.now();
+    String date = "${now.day}/${now.month}/${now.year}";
+
+    assigmentExtend["date"] = date;
+
+    await db.doc(uid).collection('Assigments').add(assigmentExtend);
+  }
+
   // add user details to exist user
   Future setUserDetails(String firstName, String lastName, String email) async {
     return await db.doc(uid).set({
@@ -76,11 +106,5 @@ class DatabaseService {
       'is_manager': false,
       "email": email
     });
-    // return await db.doc(uid).collection('userDetails').add(
-    //     {'first_name': firstName, 'last_name': lastName, 'is_manager': false});
-  }
-
-  dynamic someFunc() {
-    dynamic users = db.doc();
   }
 }

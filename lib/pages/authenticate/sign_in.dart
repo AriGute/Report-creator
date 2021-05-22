@@ -35,19 +35,18 @@ class _SignInState extends State<SignIn> {
               elevation: 0.0,
               title: Text('Sign in:'),
               actions: <Widget>[
-                FlatButton.icon(
-                  onPressed: () {
-                    widget.toggleView();
-                  },
-                  icon: Icon(
-                    Icons.person,
-                    color: appBarColor,
-                  ),
-                  label: Text(
-                    'Register',
-                    style: TextStyle(color: appBarColor),
-                  ),
-                )
+                ElevatedButton.icon(
+                    style: ElevatedButton.styleFrom(primary: Colors.redAccent),
+                    onPressed: () {
+                      widget.toggleView();
+                    },
+                    icon: Icon(
+                      Icons.person,
+                      color: appBarColor,
+                    ),
+                    label: Text(
+                      'Register',
+                    ))
               ],
             ),
             body: Container(
@@ -84,28 +83,29 @@ class _SignInState extends State<SignIn> {
                     SizedBox(
                       height: boxSize,
                     ),
-                    RaisedButton(
-                      onPressed: () async {
-                        if (_formKey.currentState.validate()) {
-                          setState(() {
-                            isLoading = true;
-                          });
-                          dynamic result = await _auth
-                              .signInWithEmailAndPassword(email, password);
-                          if (result == null) {
+                    ElevatedButton(
+                        style:
+                            ElevatedButton.styleFrom(primary: Colors.red[500]),
+                        onPressed: () async {
+                          if (_formKey.currentState.validate()) {
                             setState(() {
-                              isLoading = false;
-                              error = 'Could not sign in with those credntials';
+                              isLoading = true;
                             });
+                            dynamic result = await _auth
+                                .signInWithEmailAndPassword(email, password);
+                            if (result == null) {
+                              setState(() {
+                                isLoading = false;
+                                error =
+                                    'Could not sign in with those credntials';
+                              });
+                            }
                           }
-                        }
-                      },
-                      color: Colors.red[500],
-                      child: Text(
-                        'Sign in',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
+                        },
+                        child: Text(
+                          'Sign in',
+                          style: TextStyle(color: Colors.white),
+                        )),
                     SizedBox(height: boxSize),
                     Text(
                       error,

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:save_pdf/pages/home/assigment_list.dart';
 import 'package:save_pdf/pages/home/docs_list.dart';
 import 'package:save_pdf/pages/home/profile_bar.dart';
 import 'package:save_pdf/pages/home/report_form/report_form_page.dart';
 import 'package:save_pdf/pages/home/side_window.dart';
+import 'package:save_pdf/pages/models/assigment.dart';
 import 'package:save_pdf/pages/profile_Settings.dart';
 import 'package:save_pdf/pages/shared/constants.dart';
 import 'package:save_pdf/services/auth.dart';
@@ -27,6 +29,9 @@ class Home extends StatelessWidget {
         StreamProvider(
             create: (BuildContext context) =>
                 DatabaseService(uid: _auth.getUid()).docs()),
+        StreamProvider(
+            create: (BuildContext context) =>
+                DatabaseService(uid: _auth.getUid()).assigments()),
         StreamProvider(
             create: (BuildContext context) =>
                 DatabaseService(uid: _auth.getUid()).getCurrentUserDetails())
@@ -61,7 +66,8 @@ class Home extends StatelessWidget {
             height: boxSize,
           ),
           Container(color: Colors.red[500], child: ProfileBar()),
-          Expanded(child: DocsList())
+          Expanded(child: AssigmentList())
+          // Expanded(child: DocsList())
         ]),
         floatingActionButton: FloatingActionButton(
           onPressed: () {

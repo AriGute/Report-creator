@@ -1,24 +1,30 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:save_pdf/pages/home/report_form/form_attributes.dart';
+import 'package:save_pdf/pages/shared/constants.dart';
 import 'package:save_pdf/services/database.dart';
 
 class AssignmentForm extends StatefulWidget {
   FormAttributes assigmentList = new FormAttributes();
+  // list for each switch that suppost to be on the screen
   List<Widget> switchList = [];
+  // list of user that for assigment attachment
   List usersList = [];
-
+  // assigment subject
+  String subject = '';
   // each item in switchMap is indicator for if widget should be exist in assigment
-  Map swtichMap = {};
-
-  String targetName = "chose";
+  Map<String, bool> swtichMap = {};
+  // selected user for the assigment attachment
+  String targetName = "Chose worker";
+  // selected user id
   String selctedUid = "";
+
   @override
   _AssignmentFormState createState() => _AssignmentFormState();
 }
 
 class _AssignmentFormState extends State<AssignmentForm> {
+  // create switch by only giving string for switch purpose
   Widget getSwitch(String s) {
     if (widget.swtichMap[s] == null) {
       widget.swtichMap[s] = false;
@@ -64,13 +70,18 @@ class _AssignmentFormState extends State<AssignmentForm> {
 
   @override
   Widget build(BuildContext context) {
+    final _formKey = GlobalKey<FormState>();
+
     widget.switchList = widget.assigmentList
         .getWidgetMap()
         .keys
         .map((k) => getSwitch(k))
         .toList();
 
-    widget.switchList.add(DropdownButton<String>(
+    widget.switchList.add(DropdownButtonFormField<String>(
+      validator: (val) => widget.selctedUid.length == 0
+          ? 'Select a worker to attach him the assignment'
+          : null,
       isExpanded: true,
       hint: Text(widget.targetName),
       items: widget.usersList.map((value) {
@@ -99,10 +110,30 @@ class _AssignmentFormState extends State<AssignmentForm> {
       },
     ));
 
+    widget.switchList.add(TextFormField(
+      decoration: textIputDecoration.copyWith(hintText: 'subject'),
+      validator: (val) => val.isEmpty ? 'Enter an subject' : null,
+      onChanged: (val) {
+        widget.subject = val;
+      },
+    ));
+
     widget.switchList.add(TextButton(
         onPressed: () {
-          print("selected uid: ${widget.selctedUid}");
-          print(widget.swtichMap.values.toList());
+          if (_formKey.currentState.validate()) {
+            if (widget.selctedUid.length > 0) {
+              DatabaseService().addAssigment(
+                  widget.selctedUid, widget.swtichMap, widget.subject);
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                backgroundColor: Colors.red[500],
+                content: Text(
+                  "Assigment created",
+                  style: TextStyle(color: Colors.white),
+                ),
+              ));
+              Navigator.pop(context);
+            }
+          }
         },
         child: Text("test")));
 
@@ -111,7 +142,7 @@ class _AssignmentFormState extends State<AssignmentForm> {
         title: Text("Create assigment"),
         backgroundColor: Colors.red[500],
       ),
-      body: Column(children: widget.switchList),
+      body: Form(key: _formKey, child: Column(children: widget.switchList)),
     );
   }
 }

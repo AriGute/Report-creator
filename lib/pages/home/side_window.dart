@@ -2,8 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:save_pdf/pages/home/create_assignment/create_assignment_form.dart';
-import 'package:save_pdf/pages/models/report.dart';
-import 'package:save_pdf/services/database.dart';
 
 class SideWindows extends StatefulWidget {
   List<Widget> widgetList = [];
@@ -37,8 +35,9 @@ class _SideWindowsState extends State<SideWindows> {
       final Map userDetails = Provider.of<DocumentSnapshot>(context).data();
 
       widget.widgetList.add(setTextButton(() {
+        // TODO: move to new frame with all the report for the current user
         print("testing button");
-      }, "test"));
+      }, "Reports"));
       if (userDetails["is_manager"]) {
         widget.widgetList.add(setTextButton(() {
           Navigator.push(

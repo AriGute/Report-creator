@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:save_pdf/pages/models/base_form.dart';
 
+// not used at the moment
 class GeneratorReport extends StatefulWidget {
   List<Widget> widgetList = [];
   BaseForm report;
