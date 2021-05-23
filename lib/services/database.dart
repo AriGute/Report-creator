@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:save_pdf/pages/models/assigment.dart';
+import 'package:save_pdf/pages/models/assignment.dart';
 import 'package:save_pdf/pages/models/report.dart';
 
 class DatabaseService {
@@ -36,9 +36,9 @@ class DatabaseService {
   }
 
   // get report doc list from snapshot
-  List<Assigment> _assigmentsListFromSnapShot(QuerySnapshot snapshot) {
+  List<Assignment> _assigmentsListFromSnapShot(QuerySnapshot snapshot) {
     return snapshot.docs.map((doc) {
-      return Assigment(
+      return Assignment(
           subject: doc.data()["subject"] ?? 'No subject',
           date: doc.data()["date"] ?? '0/0/0',
           uid: doc.id);
@@ -46,8 +46,8 @@ class DatabaseService {
   }
 
   // get reports that belong to exist user
-  Stream<List<Assigment>> assigments() {
-    final CollectionReference reportsDb = db.doc(uid).collection("Assigments");
+  Stream<List<Assignment>> assignments() {
+    final CollectionReference reportsDb = db.doc(uid).collection("Assignments");
     return reportsDb.snapshots().map(_assigmentsListFromSnapShot);
   }
 
@@ -61,13 +61,31 @@ class DatabaseService {
     return db.doc(uid).snapshots();
   }
 
-  // get stream to current user DocumentSnapshot from users collection
+  // get map to current user details
   Future<Map> getUserDetails(String someUID) async {
     Stream<DocumentSnapshot> temp = await db.doc(someUID).snapshots();
     await temp.first.then((value) {
       return value.data();
     });
     return await temp.first.then((value) {
+      return value.data();
+    });
+  }
+
+  // get stream to specific assigment
+  Future<Map> getAssignment(String assignmentId) async {
+    print("uid: ${uid}, assigemnt uid: ${assignmentId}");
+    Stream<DocumentSnapshot> temp = await db
+        .doc(uid)
+        .collection("Assignments")
+        .doc(assignmentId)
+        .snapshots();
+    await temp.first.then((value) {
+      print("1 ${value.exists}");
+      return value.data();
+    });
+    return await temp.first.then((value) {
+      print("2 ${value.data()}");
       return value.data();
     });
   }
@@ -95,7 +113,7 @@ class DatabaseService {
 
     assigmentExtend["date"] = date;
 
-    await db.doc(uid).collection('Assigments').add(assigmentExtend);
+    await db.doc(uid).collection('Assignments').add(assigmentExtend);
   }
 
   // add user details to exist user

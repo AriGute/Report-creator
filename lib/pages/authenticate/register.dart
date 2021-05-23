@@ -55,94 +55,99 @@ class _RegisterState extends State<Register> {
                 ),
               ],
             ),
-            body: Container(
-              padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 50.0),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  children: <Widget>[
-                    SizedBox(
-                      height: boxSize,
-                    ),
-                    TextFormField(
-                      decoration:
-                          textIputDecoration.copyWith(hintText: 'Email'),
-                      validator: (val) => val.isEmpty ? 'Enter an email' : null,
-                      onChanged: (val) {
-                        email = val;
-                      },
-                    ),
-                    SizedBox(
-                      height: boxSize,
-                    ),
-                    TextFormField(
-                      decoration:
-                          textIputDecoration.copyWith(hintText: 'Password'),
-                      obscureText: true,
-                      validator: (val) => val.length <= 5
-                          ? 'Enter password 6+ chars long'
-                          : null,
-                      onChanged: (val) {
-                        password = val;
-                      },
-                    ),
-                    SizedBox(
-                      height: boxSize,
-                    ),
-                    TextFormField(
-                      decoration:
-                          textIputDecoration.copyWith(hintText: 'First Name'),
-                      validator: (val) => val.length < 0 ? 'Enter name' : null,
-                      onChanged: (val) {
-                        firstName = val;
-                      },
-                    ),
-                    SizedBox(
-                      height: boxSize,
-                    ),
-                    TextFormField(
-                      decoration:
-                          textIputDecoration.copyWith(hintText: 'Last Name'),
-                      validator: (val) => val.length < 0 ? 'Enter name' : null,
-                      onChanged: (val) {
-                        lastName = val;
-                      },
-                    ),
-                    SizedBox(
-                      height: boxSize,
-                    ),
-                    ElevatedButton(
-                        style:
-                            ElevatedButton.styleFrom(primary: Colors.red[500]),
-                        onPressed: () async {
-                          if (_formKey.currentState.validate()) {
-                            setState(() {
-                              isLoading = true;
-                            });
-                            dynamic result =
-                                await _auth.registerWithEmailAndPassword(
-                                    email, password, firstName, lastName);
-                            if (result == null) {
-                              setState(() {
-                                isLoading = false;
-                                error = 'Please supply a valid info';
-                              });
-                            }
-                          }
+            body: ListView(children: [
+              Container(
+                padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 50.0),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    children: <Widget>[
+                      SizedBox(
+                        height: boxSize,
+                      ),
+                      TextFormField(
+                        decoration:
+                            textIputDecoration.copyWith(hintText: 'Email'),
+                        validator: (val) =>
+                            val.isEmpty ? 'Enter an email' : null,
+                        onChanged: (val) {
+                          email = val;
                         },
-                        child: Text(
-                          'Register',
-                          style: TextStyle(color: Colors.white),
-                        )),
-                    SizedBox(height: boxSize),
-                    Text(
-                      error,
-                      style: TextStyle(color: Colors.red, fontSize: 14.0),
-                    )
-                  ],
+                      ),
+                      SizedBox(
+                        height: boxSize,
+                      ),
+                      TextFormField(
+                        decoration:
+                            textIputDecoration.copyWith(hintText: 'Password'),
+                        obscureText: true,
+                        validator: (val) => val.length <= 5
+                            ? 'Enter password 6+ chars long'
+                            : null,
+                        onChanged: (val) {
+                          password = val;
+                        },
+                      ),
+                      SizedBox(
+                        height: boxSize,
+                      ),
+                      TextFormField(
+                        decoration:
+                            textIputDecoration.copyWith(hintText: 'First Name'),
+                        validator: (val) =>
+                            val.length < 0 ? 'Enter name' : null,
+                        onChanged: (val) {
+                          firstName = val;
+                        },
+                      ),
+                      SizedBox(
+                        height: boxSize,
+                      ),
+                      TextFormField(
+                        decoration:
+                            textIputDecoration.copyWith(hintText: 'Last Name'),
+                        validator: (val) =>
+                            val.length < 0 ? 'Enter name' : null,
+                        onChanged: (val) {
+                          lastName = val;
+                        },
+                      ),
+                      SizedBox(
+                        height: boxSize,
+                      ),
+                      ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                              primary: Colors.red[500]),
+                          onPressed: () async {
+                            if (_formKey.currentState.validate()) {
+                              setState(() {
+                                isLoading = true;
+                              });
+                              dynamic result =
+                                  await _auth.registerWithEmailAndPassword(
+                                      email, password, firstName, lastName);
+                              if (result == null) {
+                                setState(() {
+                                  isLoading = false;
+                                  error = 'Please supply a valid info';
+                                });
+                              }
+                            }
+                          },
+                          child: Text(
+                            'Register',
+                            style: TextStyle(color: Colors.white),
+                          )),
+                      SizedBox(height: boxSize),
+                      Text(
+                        error,
+                        style: TextStyle(color: Colors.red, fontSize: 14.0),
+                      )
+                    ],
+                  ),
                 ),
               ),
-            ),
+            ]),
           );
   }
 }

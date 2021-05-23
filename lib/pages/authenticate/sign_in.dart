@@ -49,72 +49,75 @@ class _SignInState extends State<SignIn> {
                     ))
               ],
             ),
-            body: Container(
-              padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 50.0),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  children: <Widget>[
-                    SizedBox(
-                      height: boxSize,
-                    ),
-                    TextFormField(
-                      decoration:
-                          textIputDecoration.copyWith(hintText: 'Email'),
-                      validator: (val) => val.isEmpty ? 'Enter an email' : null,
-                      onChanged: (val) {
-                        email = val;
-                      },
-                    ),
-                    SizedBox(
-                      height: boxSize,
-                    ),
-                    TextFormField(
-                      decoration:
-                          textIputDecoration.copyWith(hintText: 'Password'),
-                      obscureText: true,
-                      validator: (val) => val.length <= 5
-                          ? 'Enter password 6+ chars long'
-                          : null,
-                      onChanged: (val) {
-                        password = val;
-                      },
-                    ),
-                    SizedBox(
-                      height: boxSize,
-                    ),
-                    ElevatedButton(
-                        style:
-                            ElevatedButton.styleFrom(primary: Colors.red[500]),
-                        onPressed: () async {
-                          if (_formKey.currentState.validate()) {
-                            setState(() {
-                              isLoading = true;
-                            });
-                            dynamic result = await _auth
-                                .signInWithEmailAndPassword(email, password);
-                            if (result == null) {
-                              setState(() {
-                                isLoading = false;
-                                error =
-                                    'Could not sign in with those credntials';
-                              });
-                            }
-                          }
+            body: ListView(children: [
+              Container(
+                padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 50.0),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    children: <Widget>[
+                      SizedBox(
+                        height: boxSize,
+                      ),
+                      TextFormField(
+                        decoration:
+                            textIputDecoration.copyWith(hintText: 'Email'),
+                        validator: (val) =>
+                            val.isEmpty ? 'Enter an email' : null,
+                        onChanged: (val) {
+                          email = val;
                         },
-                        child: Text(
-                          'Sign in',
-                          style: TextStyle(color: Colors.white),
-                        )),
-                    SizedBox(height: boxSize),
-                    Text(
-                      error,
-                      style: TextStyle(color: Colors.red, fontSize: 14.0),
-                    )
-                  ],
+                      ),
+                      SizedBox(
+                        height: boxSize,
+                      ),
+                      TextFormField(
+                        decoration:
+                            textIputDecoration.copyWith(hintText: 'Password'),
+                        obscureText: true,
+                        validator: (val) => val.length <= 5
+                            ? 'Enter password 6+ chars long'
+                            : null,
+                        onChanged: (val) {
+                          password = val;
+                        },
+                      ),
+                      SizedBox(
+                        height: boxSize,
+                      ),
+                      ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                              primary: Colors.red[500]),
+                          onPressed: () async {
+                            if (_formKey.currentState.validate()) {
+                              setState(() {
+                                isLoading = true;
+                              });
+                              dynamic result = await _auth
+                                  .signInWithEmailAndPassword(email, password);
+                              if (result == null) {
+                                setState(() {
+                                  isLoading = false;
+                                  error =
+                                      'Could not sign in with those credntials';
+                                });
+                              }
+                            }
+                          },
+                          child: Text(
+                            'Sign in',
+                            style: TextStyle(color: Colors.white),
+                          )),
+                      SizedBox(height: boxSize),
+                      Text(
+                        error,
+                        style: TextStyle(color: Colors.red, fontSize: 14.0),
+                      )
+                    ],
+                  ),
                 ),
               ),
-            ),
+            ]),
           );
     ;
   }

@@ -12,7 +12,7 @@ class DocsList extends StatefulWidget {
 
 class _DocsListState extends State<DocsList> {
   Future getWidget() async {
-    final reportList = await Provider.of<List<Report>>(context);
+    final reportList = Provider.of<List<Report>>(context);
     if (reportList.length > 0) {
       widget.docs = ListView.builder(
           itemCount: reportList.length,

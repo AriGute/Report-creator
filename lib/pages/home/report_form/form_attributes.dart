@@ -11,7 +11,7 @@ class FormAttributes {
     return originalList;
   }
 
-  List<Widget> getWidgetList() {
+  List<Widget> getFullWidgetList() {
     Map widgetMap = getWidgetMap();
     List<Widget> widgetList = [];
 
@@ -19,6 +19,20 @@ class FormAttributes {
       widgetList.add(widgetMap[k]);
     }
 
+    return widgetList;
+  }
+
+  List<Widget> getCustomWidgetList(Map instructions) {
+    Map widgetMap = getWidgetMap();
+
+    List<Widget> widgetList = [];
+    instructions.forEach((key, value) {
+      if (value) {
+        widgetList.add(widgetMap[key]);
+      }
+    });
+
+    print(widgetList);
     return widgetList;
   }
 }

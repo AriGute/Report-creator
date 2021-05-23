@@ -24,7 +24,7 @@ class AssignmentForm extends StatefulWidget {
 }
 
 class _AssignmentFormState extends State<AssignmentForm> {
-  // create switch by only giving string for switch purpose
+  // create switch (get string as name/purpose of the switch)
   Widget getSwitch(String s) {
     if (widget.swtichMap[s] == null) {
       widget.swtichMap[s] = false;
@@ -65,6 +65,7 @@ class _AssignmentFormState extends State<AssignmentForm> {
 
   @override
   void initState() {
+    super.initState();
     getUsers();
   }
 

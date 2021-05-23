@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:save_pdf/pages/models/assigment.dart';
-import 'package:save_pdf/pages/models/report.dart';
+import 'package:save_pdf/pages/home/report_form/report_form_page.dart';
+import 'package:save_pdf/pages/models/assignment.dart';
 
 class AssigmentTile extends StatelessWidget {
-  final Assigment assigment;
+  final Assignment assigment;
   AssigmentTile({this.assigment});
 
   @override
@@ -22,6 +22,12 @@ class AssigmentTile extends StatelessWidget {
           subtitle: Text(assigment.date),
           onTap: () {
             print(assigment.uid);
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => ReportForm(
+                          assigment: assigment,
+                        )));
           },
         ),
         color: Colors.grey[400],
