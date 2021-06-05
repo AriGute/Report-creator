@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:save_pdf/pages/home/report_form/base_report.dart';
+import 'package:save_pdf/pages/report_form/base_report.dart';
 import 'package:save_pdf/pages/shared/form_attributes.dart';
 import 'package:save_pdf/pages/models/assignment.dart';
 import 'package:save_pdf/pages/models/base_form.dart';
@@ -7,8 +7,7 @@ import 'package:save_pdf/services/auth.dart';
 import 'package:save_pdf/services/database.dart';
 
 class ReportForm extends StatefulWidget {
-  Assignment assigment;
-  List<Widget> widgetList = [];
+  final Assignment assigment;
   ReportForm({this.assigment});
 
   @override
@@ -16,8 +15,11 @@ class ReportForm extends StatefulWidget {
 }
 
 class _ReportFormState extends State<ReportForm> {
-  BaseForm report;
+  BaseForm baseReport;
+
   Widget reportExpend;
+  List<Widget> widgetList = [];
+  Map<String, dynamic> report = {};
 
   Widget _saveBottun() {
     return Container(
@@ -33,6 +35,7 @@ class _ReportFormState extends State<ReportForm> {
           ),
           onPressed: () {
             //TODO: async function for uploading the report.
+            print(report);
             //DatabaseService().addReport(
             //widget.assigment.uid, widget.widgetList, report.siteName
             //);
@@ -42,12 +45,29 @@ class _ReportFormState extends State<ReportForm> {
     );
   }
 
+  String dateFormat(DateTime date) {
+    return date.day.toString() +
+        "/" +
+        date.month.toString() +
+        "/" +
+        date.year.toString();
+  }
+
+  void initBaseReport() {
+    report["date"] = dateFormat(baseReport.selectedDate);
+    report["siteName"] = baseReport.siteName;
+    report["logo"] = baseReport.logo;
+    report["weather"] = baseReport.weather;
+  }
+
   Future setReport() async {
     List<Widget> widgets = FormAttributes().getFullWidgetList();
+    initBaseReport();
+
     if (widget.assigment == null) {
       // create full report(all widgets are available)
       setState(() {
-        widget.widgetList = widgets;
+        widgetList = widgets;
       });
     } else {
       // create report accordin to assigment instructions
@@ -57,13 +77,14 @@ class _ReportFormState extends State<ReportForm> {
       Map widgetInstructions = {};
       for (String key in instructions.keys) {
         if (key != "date" && key != "subject") {
+          report[key] = "empty";
           widgetInstructions[key] = instructions[key];
         }
       }
       setState(() {
         List<Widget> widgets =
             FormAttributes().getCustomWidgetList(widgetInstructions);
-        widget.widgetList = widgets;
+        widgetList = widgets;
       });
     }
   }
@@ -71,7 +92,7 @@ class _ReportFormState extends State<ReportForm> {
   @override
   void initState() {
     super.initState();
-    report = new BaseForm();
+    baseReport = new BaseForm();
     reportExpend = Text("");
     setReport();
   }
@@ -89,10 +110,10 @@ class _ReportFormState extends State<ReportForm> {
       ),
       body: Container(
         child: Column(children: [
-          BaseReport(report: report),
+          BaseReport(report: baseReport),
           Container(
               alignment: Alignment.topRight,
-              child: Column(children: widget.widgetList)),
+              child: Column(children: widgetList)),
           reportExpend,
           _saveBottun(),
         ]),
