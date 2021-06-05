@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
 
+/*
+Shared list of widget to create assigment and crete reports.
+
+Adding any widget to originalList will lead to adding widget in
+create assignment and create report.
+*/
 class FormAttributes {
   Map getWidgetMap() {
     Map originalList = {};

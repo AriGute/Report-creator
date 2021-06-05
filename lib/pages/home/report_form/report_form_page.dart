@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:save_pdf/pages/home/report_form/base_report.dart';
-import 'package:save_pdf/pages/home/report_form/form_attributes.dart';
+import 'package:save_pdf/pages/shared/form_attributes.dart';
 import 'package:save_pdf/pages/models/assignment.dart';
 import 'package:save_pdf/pages/models/base_form.dart';
 import 'package:save_pdf/services/auth.dart';
@@ -33,6 +33,9 @@ class _ReportFormState extends State<ReportForm> {
           ),
           onPressed: () {
             //TODO: async function for uploading the report.
+            //DatabaseService().addReport(
+            //widget.assigment.uid, widget.widgetList, report.siteName
+            //);
             print("Save report.");
             Navigator.pop(context);
           }),

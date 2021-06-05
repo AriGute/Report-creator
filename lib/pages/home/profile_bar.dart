@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:save_pdf/pages/shared/constants.dart';
 
 class ProfileBar extends StatefulWidget {
   String firstName = '';
@@ -13,6 +12,7 @@ class ProfileBar extends StatefulWidget {
 }
 
 class _ProfileBarState extends State<ProfileBar> {
+  // TODO: show if email is verivy in the profile bar
   Future getWidget() async {
     final Map userDetails = Provider.of<DocumentSnapshot>(context).data();
     if (userDetails != null) {

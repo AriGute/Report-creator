@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:save_pdf/pages/home/report_form/form_attributes.dart';
+import 'package:save_pdf/pages/shared/form_attributes.dart';
 import 'package:save_pdf/pages/shared/constants.dart';
 import 'package:save_pdf/services/database.dart';
 

@@ -90,6 +90,7 @@ class DatabaseService {
     });
   }
 
+/*
   // add reports to exist user
   Future addReport() async {
     return await db.doc(uid).collection('Reports').add({
@@ -97,6 +98,24 @@ class DatabaseService {
       'name': 'test',
       'anotherThing': 'some other thing',
     });
+  }
+*/
+
+  //TODO: function to add report from map obj
+  Future addReport(String uid, Map assigment, String subject) async {
+    Map<String, dynamic> assigmentExtend = {};
+    assigment.keys.forEach((key) {
+      assigmentExtend[key] = assigment[key];
+    });
+
+    assigmentExtend["subject"] = subject;
+
+    DateTime now = new DateTime.now();
+    String date = "${now.day}/${now.month}/${now.year}";
+
+    assigmentExtend["date"] = date;
+
+    await db.doc(uid).collection('Reports').add(assigmentExtend);
   }
 
   // attatch assigment(map<string, bool> widget list indicator) to user
