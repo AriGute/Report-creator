@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:save_pdf/pages/home/docs_list.dart';
+import 'package:save_pdf/pages/home/assigment_list.dart';
 import 'package:save_pdf/pages/home/profile_bar.dart';
 import 'package:save_pdf/pages/home/report_form/report_form_page.dart';
 import 'package:save_pdf/pages/home/side_window.dart';
-import 'package:save_pdf/pages/models/report.dart';
 import 'package:save_pdf/pages/profile_Settings.dart';
 import 'package:save_pdf/pages/shared/constants.dart';
 import 'package:save_pdf/services/auth.dart';
@@ -12,8 +11,6 @@ import 'package:provider/provider.dart';
 
 class Home extends StatelessWidget {
   final AuthService _auth = AuthService();
-
-  Color appBarTextColor = Colors.white;
 
   @override
   Widget build(BuildContext context) {
@@ -25,9 +22,18 @@ class Home extends StatelessWidget {
           });
     }
 
-    return StreamProvider<List<Report>>.value(
-      value: DatabaseService(uid: _auth.getUid()).docs(),
-      initialData: [],
+    return MultiProvider(
+      providers: [
+        StreamProvider(
+            create: (BuildContext context) =>
+                DatabaseService(uid: _auth.getUid()).docs()),
+        StreamProvider(
+            create: (BuildContext context) =>
+                DatabaseService(uid: _auth.getUid()).assignments()),
+        StreamProvider(
+            create: (BuildContext context) =>
+                DatabaseService(uid: _auth.getUid()).getCurrentUserDetails())
+      ],
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
@@ -35,7 +41,7 @@ class Home extends StatelessWidget {
           title: Expanded(
             child: Text(
               'Main Page:',
-              style: TextStyle(color: appBarTextColor),
+              style: TextStyle(color: Colors.white),
             ),
           ),
           centerTitle: false,
@@ -44,26 +50,26 @@ class Home extends StatelessWidget {
             IconButton(
                 icon: Icon(
                   Icons.settings,
-                  color: appBarTextColor,
+                  color: Colors.white,
                 ),
                 onPressed: () => _showSettingsPanel()),
           ],
         ),
-        drawer: Drawer(child: sideWindows()),
+        drawer: Drawer(
+            child: SideWindows(
+          homeContext: context,
+        )),
         body: Column(children: <Widget>[
           SizedBox(
             height: boxSize,
           ),
-          Container(
-              color: Colors.red[500],
-              child: ProfileBar(
-                  userDetails:
-                      DatabaseService(uid: _auth.getUid()).getUserDetails())),
-          Expanded(child: DocsList())
+          Container(color: Colors.red[500], child: ProfileBar()),
+          Expanded(child: AssigmentList())
+
+          // Expanded(child: DocsList())
         ]),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
-            print("add report");
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => ReportForm()),

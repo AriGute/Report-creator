@@ -5,6 +5,7 @@ import 'package:save_pdf/pages/shared/constants.dart';
 class BaseReport extends StatefulWidget {
   BaseForm report;
   BaseReport({this.report});
+  bool castumAssigment = false;
   @override
   _BaseReportState createState() => _BaseReportState();
 }
@@ -38,26 +39,25 @@ class _BaseReportState extends State<BaseReport> {
   }
 
   Widget _setDate() {
-    return RaisedButton(
-      onPressed: () => _selectDate(context),
-      child: RichText(
-          text: TextSpan(
-        children: [
-          WidgetSpan(
-            child: Icon(
-              Icons.date_range_outlined,
-              size: 20,
-              color: Colors.white,
+    return ElevatedButton(
+        style: ElevatedButton.styleFrom(primary: Colors.red[500]),
+        onPressed: () => _selectDate(context),
+        child: RichText(
+            text: TextSpan(
+          children: [
+            WidgetSpan(
+              child: Icon(
+                Icons.date_range_outlined,
+                size: 20,
+                color: Colors.white,
+              ),
             ),
-          ),
-          TextSpan(
-            text: "  " + widget.report.selectedDate.toString().split(" ")[0],
-            style: TextStyle(color: Colors.white),
-          )
-        ],
-      )),
-      color: Colors.red[500],
-    );
+            TextSpan(
+              text: "  " + widget.report.selectedDate.toString().split(" ")[0],
+              style: TextStyle(color: Colors.white),
+            )
+          ],
+        )));
   }
 
   Widget _getLogo() {

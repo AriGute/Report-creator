@@ -13,7 +13,7 @@ class AuthService {
 
   // create user obj based on Firebase User
   MyUser _userFromFirebaseUser(User user) {
-    print("user:  $user");
+    // print("user:  $user");
     return user != null
         ? MyUser(
             uid: user.uid,
@@ -30,7 +30,6 @@ class AuthService {
   Future signInAnon() async {
     try {
       UserCredential result = await _auth.signInAnonymously();
-      // DatabaseService extraDetails = await DatabaseService(uid: result.user.uid);
       User user = result.user;
       return _userFromFirebaseUser(user);
     } catch (e) {
@@ -45,10 +44,6 @@ class AuthService {
       UserCredential result = await _auth.signInWithEmailAndPassword(
           email: email, password: password);
       User user = result.user;
-
-      print("<[auth => signInWithEmailAndPassword, result: " +
-          result.user.toString() +
-          "]>");
       return _userFromFirebaseUser(user);
     } catch (e) {
       print(e.toString());
@@ -63,7 +58,8 @@ class AuthService {
           email: email, password: password);
       User user = result.user;
 
-      await DatabaseService(uid: user.uid).setUserDetails(firstName, lastName);
+      await DatabaseService(uid: user.uid)
+          .setUserDetails(firstName, lastName, email);
       return _userFromFirebaseUser(user);
     } catch (e) {
       print(e.toString());
