@@ -11,7 +11,6 @@ class AssigmentList extends StatefulWidget {
 
 class _AssigmentListState extends State<AssigmentList> {
   Widget getWidget(List assigmentList) {
-    // final assigmentList = Provider.of<List<Assignment>>(context);
     Widget assigments = Loading();
     if (assigmentList.length > 0) {
       assigments = ListView.builder(

@@ -24,8 +24,8 @@ class DatabaseService {
     return snapshot.docs.map((doc) {
       return Report(
           date: doc.data()['date'] ?? '',
-          name: doc.data()['name'] ?? '',
-          anotherThing: doc.data()['anotherThing'] ?? '');
+          name: doc.data()['siteName'] ?? '',
+          uid: doc.id ?? '');
     }).toList();
   }
 
@@ -90,35 +90,15 @@ class DatabaseService {
     });
   }
 
-/*
-  // add reports to exist user
-  Future addReport() async {
-    return await db.doc(uid).collection('Reports').add({
-      'date': "0",
-      'name': 'test',
-      'anotherThing': 'some other thing',
-    });
-  }
-*/
-
-  //TODO: function to add report from map obj
-  Future addReport(String uid, Map assigment, String subject) async {
+  Future addReport(Map assigment) async {
     Map<String, dynamic> assigmentExtend = {};
     assigment.keys.forEach((key) {
       assigmentExtend[key] = assigment[key];
     });
-
-    assigmentExtend["subject"] = subject;
-
-    DateTime now = new DateTime.now();
-    String date = "${now.day}/${now.month}/${now.year}";
-
-    assigmentExtend["date"] = date;
-
     await db.doc(uid).collection('Reports').add(assigmentExtend);
   }
 
-  // attatch assigment(map<string, bool> widget list indicator) to user
+  // attatch assigment(map<string, bool> widget list indicator) to user(uid is the targeted user!, not the current user)
   Future addAssigment(String uid, Map assigment, String subject) async {
     Map<String, dynamic> assigmentExtend = {};
     assigment.keys.forEach((key) {

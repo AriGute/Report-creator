@@ -15,11 +15,17 @@ class ReportForm extends StatefulWidget {
 }
 
 class _ReportFormState extends State<ReportForm> {
+  final AuthService _auth = AuthService();
   BaseForm baseReport;
 
   Widget reportExpend;
   List<Widget> widgetList = [];
   Map<String, dynamic> report = {};
+
+  void saveReport() {
+    initBaseReport();
+    DatabaseService(uid: _auth.getUid()).addReport(report);
+  }
 
   Widget _saveBottun() {
     return Container(
@@ -34,12 +40,7 @@ class _ReportFormState extends State<ReportForm> {
             style: TextStyle(color: Colors.white),
           ),
           onPressed: () {
-            //TODO: async function for uploading the report.
-            print(report);
-            //DatabaseService().addReport(
-            //widget.assigment.uid, widget.widgetList, report.siteName
-            //);
-            print("Save report.");
+            saveReport();
             Navigator.pop(context);
           }),
     );
@@ -66,9 +67,17 @@ class _ReportFormState extends State<ReportForm> {
 
     if (widget.assigment == null) {
       // create full report(all widgets are available)
-      setState(() {
-        widgetList = widgets;
-      });
+      initBaseReport();
+      // create report accordin to assigment instructions
+      Map instructions = FormAttributes().getWidgetMap();
+      // get a map without the keys: 'date' and 'subject'(contain only widget names from form attributes)
+      Map widgetInstructions = {};
+      for (String key in instructions.keys) {
+        if (key != "date" && key != "subject") {
+          report[key] = "empty";
+          widgetInstructions[key] = instructions[key];
+        }
+      }
     } else {
       // create report accordin to assigment instructions
       Map instructions = await DatabaseService(uid: AuthService().getUid())

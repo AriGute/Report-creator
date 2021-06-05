@@ -5,29 +5,28 @@ import 'package:save_pdf/pages/models/report.dart';
 import 'package:save_pdf/pages/shared/loading.dart';
 
 class DocsList extends StatefulWidget {
-  Widget docs = Loading();
   @override
   _DocsListState createState() => _DocsListState();
 }
 
 class _DocsListState extends State<DocsList> {
-  Future getWidget() async {
-    final reportList = Provider.of<List<Report>>(context);
+  Widget docs;
+  Widget getWidget(List<Report> reportList) {
     if (reportList.length > 0) {
-      widget.docs = ListView.builder(
+      docs = ListView.builder(
           itemCount: reportList.length,
           itemBuilder: (context, index) {
             return ReportTile(report: reportList[index]);
           });
+      return docs;
     } else {
-      widget.docs = Text("No reports found.");
+      return Text("No reports found.");
     }
-    setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
-    getWidget();
-    return widget.docs;
+    final reportList = Provider.of<List<Report>>(context);
+    return reportList == null ? Loading() : getWidget(reportList);
   }
 }

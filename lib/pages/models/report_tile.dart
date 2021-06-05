@@ -19,7 +19,10 @@ class ReportTile extends StatelessWidget {
           ),
           title: Text(report.date),
           subtitle: Text(report.name),
-          onTap: () {},
+          onTap: () {
+            // TODO: download report as pdf
+            print(report.uid);
+          },
         ),
         color: Colors.grey[400],
       ),
