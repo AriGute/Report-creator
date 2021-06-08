@@ -129,7 +129,7 @@ class _RegisterState extends State<Register> {
                               if (result == null) {
                                 setState(() {
                                   isLoading = false;
-                                  error = 'Please supply a valid info';
+                                  error = 'Invalid info or email alredy exist';
                                 });
                               }
                             }

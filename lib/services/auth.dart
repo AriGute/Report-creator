@@ -4,6 +4,11 @@ import 'package:save_pdf/pages/authenticate/authenticate.dart';
 import 'package:save_pdf/pages/models/user.dart';
 import 'package:save_pdf/services/database.dart';
 
+/*
+google-site-verification=msLVjiAAuEWlGEn-jMPsouAS1N_YD1fxsKyC1CmyEhY
+barak.app
+*/
+
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -54,13 +59,18 @@ class AuthService {
   Future registerWithEmailAndPassword(
       String email, String password, String firstName, String lastName) async {
     try {
-      UserCredential result = await _auth.createUserWithEmailAndPassword(
-          email: email, password: password);
-      User user = result.user;
+      List<String> signInMethods =
+          await _auth.fetchSignInMethodsForEmail(email);
+      if (signInMethods.isEmpty) {
+        UserCredential result = await _auth.createUserWithEmailAndPassword(
+            email: email, password: password);
+        User user = result.user;
 
-      await DatabaseService(uid: user.uid)
-          .setUserDetails(firstName, lastName, email);
-      return _userFromFirebaseUser(user);
+        await DatabaseService(uid: user.uid)
+            .setUserDetails(firstName, lastName, email);
+        return _userFromFirebaseUser(user);
+      }
+      return null;
     } catch (e) {
       print(e.toString());
     }

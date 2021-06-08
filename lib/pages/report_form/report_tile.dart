@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:save_pdf/pages/models/report.dart';
+import 'package:save_pdf/pages/report_form/report_display.dart';
 
 class ReportTile extends StatelessWidget {
   final Report report;
@@ -19,7 +20,16 @@ class ReportTile extends StatelessWidget {
           ),
           title: Text(report.date),
           subtitle: Text(report.name),
-          onTap: () {},
+          onTap: () {
+            // TODO: download report as pdf / open report
+            ReportDisplay(report.ownerUid, report.reportUid);
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) =>
+                      ReportDisplay(report.ownerUid, report.reportUid)),
+            );
+          },
         ),
         color: Colors.grey[400],
       ),
