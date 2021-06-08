@@ -2,12 +2,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:save_pdf/pages/shared/form_attributes.dart';
 import 'package:save_pdf/pages/shared/constants.dart';
+import 'package:save_pdf/pages/shared/loading.dart';
 import 'package:save_pdf/services/database.dart';
 
 class AssignmentForm extends StatefulWidget {
   FormAttributes assigmentList = new FormAttributes();
   // list for each switch that suppost to be on the screen
-  List<Widget> switchList = [];
+  List<Widget> switchList = [Loading()];
   // list of user that for assigment attachment
   List usersList = [];
   // assigment subject
@@ -24,6 +25,8 @@ class AssignmentForm extends StatefulWidget {
 }
 
 class _AssignmentFormState extends State<AssignmentForm> {
+  final _formKey = GlobalKey<FormState>();
+
   // create switch (get string as name/purpose of the switch)
   Widget getSwitch(String s) {
     if (widget.swtichMap[s] == null) {
@@ -44,40 +47,24 @@ class _AssignmentFormState extends State<AssignmentForm> {
     );
   }
 
-  // get a list of users from stream of QuerySnapShot from user collection
   Future<List> getUsers() async {
-    Stream<QuerySnapshot> queryStream = DatabaseService().getUserCollection();
-    queryStream.listen((qss) {
-      qss.docs.forEach((doc) async {
-        Map queryStream = await DatabaseService().getUserDetails(doc.id);
-        Map user = queryStream;
-        user["uid"] = doc.id;
-        widget.usersList.add(queryStream);
-        widget.usersList.sort((a, b) {
-          return a['first_name']
-              .toLowerCase()
-              .compareTo(b['first_name'].toLowerCase());
-        });
-        setState(() {});
-      });
+    QuerySnapshot qs = await DatabaseService().getUsers();
+    qs.docs.forEach((doc) {
+      widget.usersList.add(doc.data());
+    });
+    widget.usersList.sort((a, b) {
+      return a['first_name']
+          .toLowerCase()
+          .compareTo(b['first_name'].toLowerCase());
     });
   }
 
-  @override
-  void initState() {
-    super.initState();
+  Future initAssignmentForm() async {
     getUsers();
-  }
 
-  @override
-  Widget build(BuildContext context) {
-    final _formKey = GlobalKey<FormState>();
-
-    widget.switchList = widget.assigmentList
-        .getWidgetMap()
-        .keys
-        .map((k) => getSwitch(k))
-        .toList();
+    Map widgetMap = await FormAttributes().getWidgetMap();
+    widget.switchList = [];
+    widget.switchList = widgetMap.keys.map((k) => getSwitch(k)).toList();
 
     widget.switchList.add(DropdownButtonFormField<String>(
       validator: (val) => widget.selctedUid.length == 0
@@ -126,7 +113,7 @@ class _AssignmentFormState extends State<AssignmentForm> {
               DatabaseService().addAssigment(
                   widget.selctedUid, widget.swtichMap, widget.subject);
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                backgroundColor: Colors.red[500],
+                backgroundColor: Colors.red[800],
                 content: Text(
                   "Assigment created",
                   style: TextStyle(color: Colors.white),
@@ -137,7 +124,17 @@ class _AssignmentFormState extends State<AssignmentForm> {
           }
         },
         child: Text("Assign")));
+    setState(() {});
+  }
 
+  @override
+  void initState() {
+    super.initState();
+    initAssignmentForm();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
           title: Text("Create assigment"),

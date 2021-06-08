@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:save_pdf/pages/create_assignment/create_assignment_form.dart';
+import 'package:save_pdf/pages/home/edit_report_form.dart';
 import 'package:save_pdf/pages/report_form/reports_viewer.dart';
 
 /*
@@ -48,6 +49,12 @@ class _DrawerWidgetsState extends State<DrawerWidgets> {
           MaterialPageRoute(builder: (context) => AssignmentForm()),
         );
       }, "Create assignment"));
+      widgetList.add(setTextButton(() {
+        Navigator.push(
+          widget.homeContext,
+          MaterialPageRoute(builder: (context) => EditReportForm()),
+        );
+      }, "Edit report form"));
     }
     print("finish set widgets");
     return widgetList;

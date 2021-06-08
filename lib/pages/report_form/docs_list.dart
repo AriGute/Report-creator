@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:save_pdf/pages/models/report_tile.dart';
+import 'package:save_pdf/pages/report_form/report_tile.dart';
 import 'package:save_pdf/pages/models/report.dart';
 import 'package:save_pdf/pages/shared/loading.dart';
 

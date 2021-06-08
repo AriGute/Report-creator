@@ -3,6 +3,7 @@ import 'package:save_pdf/pages/report_form/base_report.dart';
 import 'package:save_pdf/pages/shared/form_attributes.dart';
 import 'package:save_pdf/pages/models/assignment.dart';
 import 'package:save_pdf/pages/models/base_form.dart';
+import 'package:save_pdf/pages/shared/loading.dart';
 import 'package:save_pdf/services/auth.dart';
 import 'package:save_pdf/services/database.dart';
 
@@ -19,7 +20,7 @@ class _ReportFormState extends State<ReportForm> {
   BaseForm baseReport;
 
   Widget reportExpend;
-  List<Widget> widgetList = [];
+  List<Widget> widgetList = [Loading()];
   Map<String, dynamic> report = {};
 
   void saveReport() {
@@ -62,22 +63,14 @@ class _ReportFormState extends State<ReportForm> {
   }
 
   Future setReport() async {
-    List<Widget> widgets = FormAttributes().getFullWidgetList();
+    List<Widget> widgets = await FormAttributes().getFullWidgetList();
+    widgetList = [];
     initBaseReport();
 
     if (widget.assigment == null) {
       // create full report(all widgets are available)
-      initBaseReport();
-      // create report accordin to assigment instructions
-      Map instructions = FormAttributes().getWidgetMap();
-      // get a map without the keys: 'date' and 'subject'(contain only widget names from form attributes)
-      Map widgetInstructions = {};
-      for (String key in instructions.keys) {
-        if (key != "date" && key != "subject") {
-          report[key] = "empty";
-          widgetInstructions[key] = instructions[key];
-        }
-      }
+      widgetList = await FormAttributes().getFullWidgetList();
+      setState(() {});
     } else {
       // create report accordin to assigment instructions
       Map instructions = await DatabaseService(uid: AuthService().getUid())
@@ -90,9 +83,9 @@ class _ReportFormState extends State<ReportForm> {
           widgetInstructions[key] = instructions[key];
         }
       }
+      List<Widget> widgets =
+          await FormAttributes().getCustomWidgetList(widgetInstructions);
       setState(() {
-        List<Widget> widgets =
-            FormAttributes().getCustomWidgetList(widgetInstructions);
         widgetList = widgets;
       });
     }

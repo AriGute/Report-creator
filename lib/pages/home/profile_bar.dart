@@ -13,26 +13,6 @@ class ProfileBar extends StatefulWidget {
 }
 
 class _ProfileBarState extends State<ProfileBar> {
-  // TODO: move this to database services
-  // Future getWidget() async {
-  //   if (userDetails != null) {
-  //     widget.firstName =
-  //         userDetails["first_name"] + " " + userDetails["last_name"];
-  //     if (userDetails["is_manager"]) {
-  //       widget.managerBaget = Icon(
-  //         Icons.badge,
-  //         color: Colors.white,
-  //       );
-  //     } else {
-  //       widget.managerBaget = Icon(
-  //         Icons.account_circle,
-  //         color: Colors.white,
-  //       );
-  //     }
-  //   }
-  //   setState(() {});
-  // }
-
   Widget getBadge(bool isManager) {
     if (isManager) {
       return widget.managerBaget = Icon(
