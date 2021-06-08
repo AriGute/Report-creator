@@ -20,7 +20,7 @@ class _AssigmentListState extends State<AssigmentList> {
           });
       return assigments;
     } else {
-      return Text("No reports found.");
+      return Text("There is no assignments for the moment.");
     }
   }
 

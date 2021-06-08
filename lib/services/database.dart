@@ -235,4 +235,16 @@ class DatabaseService {
       print(e);
     }
   }
+
+  Future deletReport(String workerUid, String reportUid) async {
+    try {
+      print("Delet report: " + reportUid);
+      final CollectionReference reportsDb =
+          db.doc(workerUid).collection("Assignments");
+      await reportsDb.doc(reportUid).delete();
+      print("Finish deleting.");
+    } on Exception catch (e) {
+      print(e);
+    }
+  }
 }

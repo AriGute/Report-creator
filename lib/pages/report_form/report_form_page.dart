@@ -41,7 +41,27 @@ class _ReportFormState extends State<ReportForm> {
             style: TextStyle(color: Colors.white),
           ),
           onPressed: () {
-            saveReport();
+            print(report);
+            if (widget.assigment != null) {
+              try {
+                DatabaseService()
+                    .deletReport(_auth.getUid(), widget.assigment.uid);
+                saveReport();
+              } on Exception catch (e) {
+                // should skip save phase if throw exeption.
+                SnackBar(
+                  backgroundColor: Colors.red[800],
+                  content: Text(
+                    "Error, could not delet the assignment before creating new report.",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                );
+                print(e);
+              }
+            } else {
+              saveReport();
+            }
+
             Navigator.pop(context);
           }),
     );

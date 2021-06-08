@@ -102,7 +102,10 @@ class _EditReportFormState extends State<EditReportForm> {
         Expanded(
           flex: 1,
           child: IconButton(
-              icon: Icon(Icons.cancel),
+              icon: Icon(
+                Icons.cancel,
+                color: Colors.red[500],
+              ),
               onPressed: () {
                 String myKey = key;
                 print("Remove ${myKey} from the report form.");
