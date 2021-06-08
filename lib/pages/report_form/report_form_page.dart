@@ -111,7 +111,7 @@ class _ReportFormState extends State<ReportForm> {
         ),
       ),
       body: Container(
-        child: Column(children: [
+        child: ListView(children: [
           BaseReport(report: baseReport),
           Container(
               alignment: Alignment.topRight,
