@@ -44,7 +44,7 @@ class _EditReportFormState extends State<EditReportForm> {
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
               backgroundColor: Colors.red[800],
               content: Text(
-                "There is alredy a new attribute, change it, save the report form and then create new one.",
+                "There is alredy a new attribute, change it, save the report form and then create new attribute.",
                 style: TextStyle(color: Colors.white),
               ),
             ));

@@ -60,71 +60,76 @@ class _AssignmentFormState extends State<AssignmentForm> {
   }
 
   Future initAssignmentForm() async {
-    getUsers();
+    try {
+      getUsers();
 
-    Map widgetMap = await FormAttributes().getWidgetMap();
-    widget.switchList = [];
-    widget.switchList = widgetMap.keys.map((k) => getSwitch(k)).toList();
+      Map widgetMap = await FormAttributes().getWidgetMap();
+      widget.switchList = [];
+      widget.switchList = widgetMap.keys.map((k) => getSwitch(k)).toList();
 
-    widget.switchList.add(DropdownButtonFormField<String>(
-      validator: (val) => widget.selctedUid.length == 0
-          ? 'Select a worker to attach him the assignment'
-          : null,
-      isExpanded: true,
-      hint: Text(widget.targetName),
-      items: widget.usersList.map((value) {
-        return new DropdownMenuItem<String>(
-          value: value["first_name"] +
-              " " +
-              value["last_name"] +
-              " |" +
-              value["email"],
-          child: new Text(value["first_name"] +
-              " " +
-              value["last_name"] +
-              " |" +
-              value["email"]),
-        );
-      }).toList(),
-      onChanged: (pick) {
-        setState(() {
-          widget.targetName = pick;
-          widget.usersList.forEach((user) {
-            if (pick.split("|")[1] == user["email"]) {
-              widget.selctedUid = user["uid"];
-            }
+      widget.switchList.add(DropdownButtonFormField<String>(
+        validator: (val) => widget.selctedUid.length == 0
+            ? 'Select a worker to attach him the assignment'
+            : null,
+        isExpanded: true,
+        hint: Text(widget.targetName),
+        items: widget.usersList.map((value) {
+          return new DropdownMenuItem<String>(
+            value: value["first_name"] +
+                " " +
+                value["last_name"] +
+                " |" +
+                value["email"],
+            child: new Text(value["first_name"] +
+                " " +
+                value["last_name"] +
+                " |" +
+                value["email"]),
+          );
+        }).toList(),
+        onChanged: (pick) {
+          setState(() {
+            widget.targetName = pick;
+            widget.usersList.forEach((user) {
+              if (pick.split("|")[1] == user["email"]) {
+                widget.selctedUid = user["uid"];
+              }
+            });
           });
-        });
-      },
-    ));
-
-    widget.switchList.add(TextFormField(
-      decoration: textIputDecoration.copyWith(hintText: 'subject'),
-      validator: (val) => val.isEmpty ? 'Enter an subject' : null,
-      onChanged: (val) {
-        widget.subject = val;
-      },
-    ));
-
-    widget.switchList.add(TextButton(
-        onPressed: () {
-          if (_formKey.currentState.validate()) {
-            if (widget.selctedUid.length > 0) {
-              DatabaseService().addAssigment(
-                  widget.selctedUid, widget.swtichMap, widget.subject);
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                backgroundColor: Colors.red[800],
-                content: Text(
-                  "Assigment created",
-                  style: TextStyle(color: Colors.white),
-                ),
-              ));
-              Navigator.pop(context);
-            }
-          }
         },
-        child: Text("Assign")));
-    setState(() {});
+      ));
+
+      widget.switchList.add(TextFormField(
+        decoration: textIputDecoration.copyWith(hintText: 'subject'),
+        validator: (val) => val.isEmpty ? 'Enter an subject' : null,
+        onChanged: (val) {
+          widget.subject = val;
+        },
+      ));
+
+      widget.switchList.add(TextButton(
+          onPressed: () {
+            if (_formKey.currentState.validate()) {
+              if (widget.selctedUid.length > 0) {
+                DatabaseService().addAssigment(
+                    widget.selctedUid, widget.swtichMap, widget.subject);
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  backgroundColor: Colors.red[800],
+                  content: Text(
+                    "Assigment created",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ));
+                Navigator.pop(context);
+              }
+            }
+          },
+          child: Text("Assign")));
+      setState(() {});
+    } on Exception catch (e) {
+      Navigator.pop(context);
+      print("Error " + e.toString());
+    }
   }
 
   @override

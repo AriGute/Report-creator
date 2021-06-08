@@ -4,6 +4,7 @@ import 'package:save_pdf/pages/models/report.dart';
 
 class DatabaseService {
   final String uid;
+  final String reportFormUid = "EMFSTZ9oxm3rHGYD5rjd";
   DatabaseService({this.uid});
   //collection refrence
   final CollectionReference db = FirebaseFirestore.instance.collection('Users');
@@ -35,6 +36,7 @@ class DatabaseService {
       }).toList();
     } on Exception catch (e) {
       print(e);
+      return null;
     }
   }
 
@@ -46,6 +48,7 @@ class DatabaseService {
       return reportsDb;
     } on Exception catch (e) {
       print(e);
+      return null;
     }
   }
 
@@ -56,6 +59,7 @@ class DatabaseService {
       return reportsDb.snapshots().map(_reportListFromSnapShot);
     } on Exception catch (e) {
       print(e);
+      return null;
     }
   }
 
@@ -77,6 +81,7 @@ class DatabaseService {
       return reportsDb.snapshots().map(_assigmentsListFromSnapShot);
     } on Exception catch (e) {
       print(e);
+      return null;
     }
   }
 
@@ -86,6 +91,7 @@ class DatabaseService {
       return db.doc(uid).snapshots();
     } on Exception catch (e) {
       print(e);
+      return null;
     }
   }
 
@@ -101,6 +107,7 @@ class DatabaseService {
       });
     } on Exception catch (e) {
       print(e);
+      return null;
     }
   }
 
@@ -123,6 +130,7 @@ class DatabaseService {
       });
     } on Exception catch (e) {
       print(e);
+      return null;
     }
   }
 
@@ -183,7 +191,7 @@ class DatabaseService {
       });
       return await FirebaseFirestore.instance
           .collection('ReportForm')
-          .doc()
+          .doc(reportFormUid)
           .set(form);
     } on Exception catch (e) {
       print(e);
@@ -193,18 +201,28 @@ class DatabaseService {
   // get report form attributes
   Future<DocumentSnapshot> getReportForm() async {
     try {
-      final CollectionReference reportForm =
-          FirebaseFirestore.instance.collection('ReportForm');
-      QuerySnapshot rfdss = await reportForm.limit(1).get();
-      print("work 1: " + reportForm.toString());
-      print("work 2: " + rfdss.size.toString());
-      if (rfdss.size == 0) {
+      // final CollectionReference reportForm =
+      //     FirebaseFirestore.instance.collection('ReportForm');
+      // QuerySnapshot rfdss = await reportForm.limit(1).get();
+      // if (rfdss.size == 0) {
+      //   print("Collection 'ReportForm' not exits, create new one.");
+      //   await setReportForm(["new"]);
+      // }
+      // return rfdss.docs.first;
+      final DocumentSnapshot rf = await FirebaseFirestore.instance
+          .collection('ReportForm')
+          .doc(reportFormUid)
+          .get();
+      if (rf.exists) {
+        return rf;
+      } else {
         print("Collection 'ReportForm' not exits, create new one.");
         await setReportForm(["new"]);
+        return null;
       }
-      return rfdss.docs.first;
     } on Exception catch (e) {
       print(e);
+      return null;
     }
   }
 
