@@ -41,11 +41,16 @@ class DatabaseService {
   }
 
   // get report(with report uid) of some worker(with worker uid)
-  DocumentReference getReport(String workerUid, String reportUid) {
+  Future<DocumentSnapshot> getReport(String ownerUid, String reportUid) {
     try {
-      final DocumentReference reportsDb =
-          db.doc(workerUid).collection("Reports").doc(reportUid);
-      return reportsDb;
+      Future<DocumentSnapshot> report =
+          db.doc(ownerUid).collection("Reports").doc(reportUid).get();
+
+      // final DocumentReference reportsDb =
+      //     db.doc(ownerUid).collection("Reports").doc(reportUid);
+      return report.then((value) {
+        return value;
+      });
     } on Exception catch (e) {
       print(e);
       return null;
@@ -201,14 +206,6 @@ class DatabaseService {
   // get report form attributes
   Future<DocumentSnapshot> getReportForm() async {
     try {
-      // final CollectionReference reportForm =
-      //     FirebaseFirestore.instance.collection('ReportForm');
-      // QuerySnapshot rfdss = await reportForm.limit(1).get();
-      // if (rfdss.size == 0) {
-      //   print("Collection 'ReportForm' not exits, create new one.");
-      //   await setReportForm(["new"]);
-      // }
-      // return rfdss.docs.first;
       final DocumentSnapshot rf = await FirebaseFirestore.instance
           .collection('ReportForm')
           .doc(reportFormUid)
@@ -236,7 +233,8 @@ class DatabaseService {
     }
   }
 
-  Future deletReport(String workerUid, String reportUid) async {
+  // delet report from the db
+  Future deletAssignments(String workerUid, String reportUid) async {
     try {
       print("Delet report: " + reportUid);
       final CollectionReference reportsDb =

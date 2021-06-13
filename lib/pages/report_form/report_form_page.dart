@@ -22,10 +22,57 @@ class _ReportFormState extends State<ReportForm> {
   Widget reportExpend;
   List<Widget> widgetList = [Loading()];
   Map<String, dynamic> report = {};
+  bool readyToBeSave = true;
 
-  void saveReport() {
+  void _saveFunction() {
+    if (widget.assigment != null) {
+      DatabaseService().deletAssignments(_auth.getUid(), widget.assigment.uid);
+    }
     initBaseReport();
+    print("report :: " + report.toString());
     DatabaseService(uid: _auth.getUid()).addReport(report);
+    Navigator.pop(context);
+  }
+
+  void _saveReport() {
+    print("start saving");
+    readyToBeSave = true;
+    report.forEach((key, val) {
+      print("checking1");
+      print(val);
+      if (val == "") {
+        readyToBeSave = false;
+      }
+    });
+    print("check if ready to be saved");
+
+    if (readyToBeSave) {
+      _saveFunction();
+    } else {
+      print("cant save rigth now");
+      showDialog(
+          context: context,
+          builder: (_) => AlertDialog(
+                title: Text("Some field are empty.\nContinue saving process?"),
+                actions: [
+                  ElevatedButton(
+                    onPressed: () {
+                      _saveFunction();
+                      Navigator.pop(context);
+                    },
+                    child: Text("Yes"),
+                    style: ElevatedButton.styleFrom(primary: Colors.red[500]),
+                  ),
+                  ElevatedButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: Text("No"),
+                      style: ElevatedButton.styleFrom(primary: Colors.red[500]))
+                ],
+              ),
+          barrierDismissible: false);
+    }
   }
 
   Widget _saveBottun() {
@@ -41,28 +88,19 @@ class _ReportFormState extends State<ReportForm> {
             style: TextStyle(color: Colors.white),
           ),
           onPressed: () {
-            print(report);
-            if (widget.assigment != null) {
-              try {
-                DatabaseService()
-                    .deletReport(_auth.getUid(), widget.assigment.uid);
-                saveReport();
-              } on Exception catch (e) {
-                // should skip save phase if throw exeption.
-                SnackBar(
-                  backgroundColor: Colors.red[800],
-                  content: Text(
-                    "Error, could not delet the assignment before creating new report.",
-                    style: TextStyle(color: Colors.white),
-                  ),
-                );
-                print(e);
-              }
-            } else {
-              saveReport();
+            try {
+              _saveReport();
+            } on Exception catch (e) {
+              // should skip save phase if throw exeption.
+              SnackBar(
+                backgroundColor: Colors.red[800],
+                content: Text(
+                  "Error, could not delet the assignment before creating new report.",
+                  style: TextStyle(color: Colors.white),
+                ),
+              );
+              print(e);
             }
-
-            Navigator.pop(context);
           }),
     );
   }
@@ -83,32 +121,37 @@ class _ReportFormState extends State<ReportForm> {
   }
 
   Future setReport() async {
-    List<Widget> widgets = await FormAttributes().getFullWidgetList();
+    List<Widget> widgets = [];
+    // TODO: full report not save attributes
+    Map widgetInstructions = {};
+    Map instructions = {};
     widgetList = [];
     initBaseReport();
-
     if (widget.assigment == null) {
       // create full report(all widgets are available)
-      widgetList = await FormAttributes().getFullWidgetList();
-      setState(() {});
+      await FormAttributes()
+          .getWidgetMap()
+          .then((value) => value.forEach((key, value) {
+                instructions[key] = true;
+              }));
     } else {
       // create report accordin to assigment instructions
-      Map instructions = await DatabaseService(uid: AuthService().getUid())
+      instructions = await DatabaseService(uid: AuthService().getUid())
           .getAssignment(widget.assigment.uid);
-      // get a map without the keys: 'date' and 'subject'(contain only widget names from form attributes)
-      Map widgetInstructions = {};
-      for (String key in instructions.keys) {
-        if (key != "date" && key != "subject") {
-          report[key] = "empty";
-          widgetInstructions[key] = instructions[key];
-        }
-      }
-      List<Widget> widgets =
-          await FormAttributes().getCustomWidgetList(widgetInstructions);
-      setState(() {
-        widgetList = widgets;
-      });
     }
+    for (String key in instructions.keys) {
+      // get a map without the keys: 'date' and 'subject'(contain only widget names from form attributes)
+      if (key != "date" && key != "subject") {
+        report[key] = "empty";
+        widgetInstructions[key] = instructions[key];
+      }
+    }
+    widgets = await FormAttributes(valuesMap: report)
+        .getCustomWidgetList(widgetInstructions);
+    print("finish waiting");
+    setState(() {
+      widgetList = widgets;
+    });
   }
 
   @override

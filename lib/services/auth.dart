@@ -1,6 +1,4 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:save_pdf/pages/authenticate/authenticate.dart';
 import 'package:save_pdf/pages/models/user.dart';
 import 'package:save_pdf/services/database.dart';
 

@@ -62,6 +62,7 @@ class _AssignmentFormState extends State<AssignmentForm> {
           .compareTo(b['first_name'].toLowerCase());
     });
     widget.targetName = "Chose worker";
+    setState(() {});
   }
 
   Future initWidgetMap() async {
@@ -135,6 +136,7 @@ class _AssignmentFormState extends State<AssignmentForm> {
               DatabaseService().addAssigment(
                   widget.selctedUid, widget.swtichMap, widget.subject);
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                duration: Duration(seconds: 1, milliseconds: 500),
                 backgroundColor: Colors.red[800],
                 content: Text(
                   "Assigment created",

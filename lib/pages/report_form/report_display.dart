@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:save_pdf/pages/shared/loading.dart';
+import 'package:save_pdf/services/database.dart';
 
 class ReportDisplay extends StatefulWidget {
   final String reportUid;
@@ -11,6 +13,37 @@ class ReportDisplay extends StatefulWidget {
 }
 
 class _ReportDisplayState extends State<ReportDisplay> {
+  DocumentSnapshot doc;
+  List<Widget> report = [Loading()];
+
+  Future fillReport() async {
+    doc = await DatabaseService().getReport(widget.ownerUid, widget.reportUid);
+    report = [];
+    String title = "";
+    doc.data().forEach((key, value) {
+      if (key == "date") {
+        report.insert(0, Text(key + ": " + value));
+      } else if (key == "siteName") {
+        title += key + ": " + value + ",  ";
+      } else if (key == "weather") {
+        title += key + ": " + value + ",  ";
+      } else if (key == "logo") {
+        title += key + ": " + value + ",  ";
+      } else {
+        report.add(Text(key + ": " + value));
+      }
+    });
+    report.insert(0, Text(title));
+
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    fillReport();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,15 +55,7 @@ class _ReportDisplayState extends State<ReportDisplay> {
         ),
       ),
       body: Column(
-        //TODO: sohw report info based on the report uid and report owner uid
-        //      and option to download as a pdf with PdfGenerator(and maybe even edit in this page?)
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text("report: " + widget.reportUid),
-          SizedBox(),
-          Text("woker: " + widget.ownerUid)
-        ],
-      ),
+          crossAxisAlignment: CrossAxisAlignment.start, children: report),
     );
   }
 }
