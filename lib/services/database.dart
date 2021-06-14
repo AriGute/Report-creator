@@ -6,7 +6,6 @@ class DatabaseService {
   final String uid;
   final String reportFormUid = "EMFSTZ9oxm3rHGYD5rjd";
   DatabaseService({this.uid});
-  //collection refrence
   final CollectionReference db = FirebaseFirestore.instance.collection('Users');
   final FirebaseFirestore fb = FirebaseFirestore.instance;
 

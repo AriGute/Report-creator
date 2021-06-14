@@ -128,19 +128,24 @@ class _ReportFormState extends State<ReportForm> {
     widgetList = [];
     initBaseReport();
     if (widget.assigment == null) {
-      // create full report(all widgets are available)
+      /* 
+      Create full report(all widgets are available).
+      Get the full widget map and for each key create a representor(instructions[key] = true)
+      */
       await FormAttributes()
           .getWidgetMap()
           .then((value) => value.forEach((key, value) {
                 instructions[key] = true;
               }));
     } else {
-      // create report accordin to assigment instructions
+      /*
+      Create report accordin to assigment instructions.
+      */
       instructions = await DatabaseService(uid: AuthService().getUid())
           .getAssignment(widget.assigment.uid);
     }
     for (String key in instructions.keys) {
-      // get a map without the keys: 'date' and 'subject'(contain only widget names from form attributes)
+      // Get a map without the keys: 'date' and 'subject'(contain only widget names from form attributes)
       if (key != "date" && key != "subject") {
         report[key] = "empty";
         widgetInstructions[key] = instructions[key];

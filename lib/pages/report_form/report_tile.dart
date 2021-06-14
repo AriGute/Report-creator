@@ -22,7 +22,6 @@ class ReportTile extends StatelessWidget {
           subtitle: Text(report.name),
           onTap: () {
             // TODO: download report as pdf / open report
-            ReportDisplay(report.ownerUid, report.reportUid);
             Navigator.push(
               context,
               MaterialPageRoute(
