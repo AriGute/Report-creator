@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:save_pdf/pages/models/assignment.dart';
-import 'package:save_pdf/pages/models/report.dart';
+import 'package:B.E.E/pages/models/assignment.dart';
+import 'package:B.E.E/pages/models/report.dart';
 
 class DatabaseService {
   final String uid;
@@ -232,12 +232,25 @@ class DatabaseService {
     }
   }
 
-  // delet report from the db
+  // delet assigment for user from the db
   Future deletAssignments(String workerUid, String reportUid) async {
     try {
       print("Delet report: " + reportUid);
       final CollectionReference reportsDb =
           db.doc(workerUid).collection("Assignments");
+      await reportsDb.doc(reportUid).delete();
+      print("Finish deleting.");
+    } on Exception catch (e) {
+      print(e);
+    }
+  }
+
+  // delet report for user from the db
+  Future deletReport(String workerUid, String reportUid) async {
+    try {
+      print("Delet report: " + reportUid);
+      final CollectionReference reportsDb =
+          db.doc(workerUid).collection("Reports");
       await reportsDb.doc(reportUid).delete();
       print("Finish deleting.");
     } on Exception catch (e) {

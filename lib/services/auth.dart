@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:save_pdf/pages/models/user.dart';
-import 'package:save_pdf/services/database.dart';
+import 'package:B.E.E/pages/models/user.dart';
+import 'package:B.E.E/services/database.dart';
 
 /*
 google-site-verification=msLVjiAAuEWlGEn-jMPsouAS1N_YD1fxsKyC1CmyEhY
@@ -66,6 +66,7 @@ class AuthService {
 
         await DatabaseService(uid: user.uid)
             .setUserDetails(firstName, lastName, email);
+        await user.sendEmailVerification();
         return _userFromFirebaseUser(user);
       }
       return null;

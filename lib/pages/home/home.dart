@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:save_pdf/pages/create_assignment/assigment_list.dart';
-import 'package:save_pdf/pages/home/profile_bar.dart';
-import 'package:save_pdf/pages/home/drawer.dart';
-import 'package:save_pdf/pages/home/profile_Settings.dart';
-import 'package:save_pdf/pages/report_form/report_form_page.dart';
-import 'package:save_pdf/pages/shared/constants.dart';
-import 'package:save_pdf/services/auth.dart';
-import 'package:save_pdf/services/database.dart';
+import 'package:B.E.E/pages/create_assignment/assigment_list.dart';
+import 'package:B.E.E/pages/home/profile_bar.dart';
+import 'package:B.E.E/pages/home/drawer.dart';
+import 'package:B.E.E/pages/home/profile_Settings.dart';
+import 'package:B.E.E/pages/report_form/report_form_page.dart';
+import 'package:B.E.E/pages/shared/constants.dart';
+import 'package:B.E.E/services/auth.dart';
+import 'package:B.E.E/services/database.dart';
 import 'package:provider/provider.dart';
 
 class Home extends StatelessWidget {

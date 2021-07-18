@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:save_pdf/pages/report_form/report_tile.dart';
-import 'package:save_pdf/pages/models/report.dart';
-import 'package:save_pdf/pages/shared/loading.dart';
+import 'package:B.E.E/pages/report_form/report_tile.dart';
+import 'package:B.E.E/pages/models/report.dart';
+import 'package:B.E.E/pages/shared/loading.dart';
+import 'package:intl/intl.dart';
 
 class DocsList extends StatefulWidget {
   @override
@@ -12,6 +13,9 @@ class DocsList extends StatefulWidget {
 class _DocsListState extends State<DocsList> {
   Widget docs;
   Widget getWidget(List<Report> reportList) {
+    DateFormat format = DateFormat("dd/MM/yyyy");
+    reportList
+        .sort((a, b) => format.parse(b.date).compareTo(format.parse(a.date)));
     if (reportList.length > 0) {
       docs = ListView.builder(
           itemCount: reportList.length,

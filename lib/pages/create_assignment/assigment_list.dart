@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:save_pdf/pages/create_assignment/assignment_tile.dart';
-import 'package:save_pdf/pages/models/assignment.dart';
-import 'package:save_pdf/pages/shared/loading.dart';
+import 'package:B.E.E/pages/create_assignment/assignment_tile.dart';
+import 'package:B.E.E/pages/models/assignment.dart';
+import 'package:B.E.E/pages/shared/loading.dart';
 
 class AssigmentList extends StatefulWidget {
   @override
