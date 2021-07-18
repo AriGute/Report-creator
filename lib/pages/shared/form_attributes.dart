@@ -1,16 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:save_pdf/services/database.dart';
+import 'package:B.E.E/services/database.dart';
 import 'constants.dart';
 
 /*
 Shared list of attributes to create assigment and to create reports.
 */
+
 class FormAttributes {
   final Future<DocumentSnapshot> docSnapshot =
       DatabaseService().getReportForm();
   List attributeList = [];
-
+  Map<String, dynamic> valuesMap;
+  FormAttributes({this.valuesMap});
   Future<void> getDocs() async {
     try {
       DocumentSnapshot rf = await DatabaseService().getReportForm();
@@ -24,6 +26,7 @@ class FormAttributes {
     try {
       await getDocs();
       Map widgetMap = {};
+
       attributeList.forEach((subject) {
         widgetMap[subject] = getAttribute(subject);
       });
@@ -34,9 +37,18 @@ class FormAttributes {
   }
 
   Widget getAttribute(String subject) {
-    return TextFormField(
-      decoration: textIputDecoration.copyWith(hintText: subject),
-    );
+    if (valuesMap != null) {
+      return TextField(
+        decoration: textIputDecoration.copyWith(hintText: subject),
+        onChanged: (val) {
+          valuesMap[subject] = "";
+        },
+      );
+    } else {
+      return TextField(
+        decoration: textIputDecoration.copyWith(hintText: subject),
+      );
+    }
   }
 
   Future<List<Widget>> getFullWidgetList() async {
@@ -57,13 +69,21 @@ class FormAttributes {
   Future<List<Widget>> getCustomWidgetList(Map instructions) async {
     try {
       Map widgetMap = await getWidgetMap();
-
+      print("start test");
       List<Widget> widgetList = [];
       instructions.forEach((key, value) {
         if (value) {
-          widgetList.add(widgetMap[key]);
+          /*
+          If assignment  hade some form attribute and at some 
+          point someone remove this attribute then only the existed 
+          attribute will be shown and the rest will be ignored.
+          */
+          if (widgetMap.containsKey(key)) {
+            widgetList.add(widgetMap[key]);
+          }
         }
       });
+      print("end test");
 
       print(widgetList);
       return widgetList;

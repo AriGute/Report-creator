@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:save_pdf/pages/models/base_form.dart';
-import 'package:save_pdf/pages/shared/constants.dart';
+import 'package:B.E.E/pages/models/base_form.dart';
+import 'package:B.E.E/pages/shared/constants.dart';
 
 class BaseReport extends StatefulWidget {
   BaseForm report;
@@ -134,6 +134,7 @@ class _BaseReportState extends State<BaseReport> {
   @override
   Widget build(BuildContext context) {
     return Column(children: [
+      Divider(color: Colors.grey),
       Form(
         child: Row(children: <Widget>[
           Expanded(
@@ -151,6 +152,7 @@ class _BaseReportState extends State<BaseReport> {
         })),
         Expanded(child: _getLogo())
       ]),
+      Divider(color: Colors.grey)
     ]);
   }
 }

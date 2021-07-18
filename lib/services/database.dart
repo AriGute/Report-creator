@@ -1,12 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:save_pdf/pages/models/assignment.dart';
-import 'package:save_pdf/pages/models/report.dart';
+import 'package:B.E.E/pages/models/assignment.dart';
+import 'package:B.E.E/pages/models/report.dart';
 
 class DatabaseService {
   final String uid;
   final String reportFormUid = "EMFSTZ9oxm3rHGYD5rjd";
   DatabaseService({this.uid});
-  //collection refrence
   final CollectionReference db = FirebaseFirestore.instance.collection('Users');
   final FirebaseFirestore fb = FirebaseFirestore.instance;
 
@@ -41,11 +40,16 @@ class DatabaseService {
   }
 
   // get report(with report uid) of some worker(with worker uid)
-  DocumentReference getReport(String workerUid, String reportUid) {
+  Future<DocumentSnapshot> getReport(String ownerUid, String reportUid) {
     try {
-      final DocumentReference reportsDb =
-          db.doc(workerUid).collection("Reports").doc(reportUid);
-      return reportsDb;
+      Future<DocumentSnapshot> report =
+          db.doc(ownerUid).collection("Reports").doc(reportUid).get();
+
+      // final DocumentReference reportsDb =
+      //     db.doc(ownerUid).collection("Reports").doc(reportUid);
+      return report.then((value) {
+        return value;
+      });
     } on Exception catch (e) {
       print(e);
       return null;
@@ -201,14 +205,6 @@ class DatabaseService {
   // get report form attributes
   Future<DocumentSnapshot> getReportForm() async {
     try {
-      // final CollectionReference reportForm =
-      //     FirebaseFirestore.instance.collection('ReportForm');
-      // QuerySnapshot rfdss = await reportForm.limit(1).get();
-      // if (rfdss.size == 0) {
-      //   print("Collection 'ReportForm' not exits, create new one.");
-      //   await setReportForm(["new"]);
-      // }
-      // return rfdss.docs.first;
       final DocumentSnapshot rf = await FirebaseFirestore.instance
           .collection('ReportForm')
           .doc(reportFormUid)
@@ -231,6 +227,32 @@ class DatabaseService {
     try {
       final QuerySnapshot reportForm = await db.get();
       return reportForm;
+    } on Exception catch (e) {
+      print(e);
+    }
+  }
+
+  // delet assigment for user from the db
+  Future deletAssignments(String workerUid, String reportUid) async {
+    try {
+      print("Delet report: " + reportUid);
+      final CollectionReference reportsDb =
+          db.doc(workerUid).collection("Assignments");
+      await reportsDb.doc(reportUid).delete();
+      print("Finish deleting.");
+    } on Exception catch (e) {
+      print(e);
+    }
+  }
+
+  // delet report for user from the db
+  Future deletReport(String workerUid, String reportUid) async {
+    try {
+      print("Delet report: " + reportUid);
+      final CollectionReference reportsDb =
+          db.doc(workerUid).collection("Reports");
+      await reportsDb.doc(reportUid).delete();
+      print("Finish deleting.");
     } on Exception catch (e) {
       print(e);
     }

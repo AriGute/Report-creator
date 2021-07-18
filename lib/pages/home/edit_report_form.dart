@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:save_pdf/pages/shared/constants.dart';
-import 'package:save_pdf/pages/shared/loading.dart';
-import 'package:save_pdf/services/database.dart';
+import 'package:B.E.E/pages/shared/constants.dart';
+import 'package:B.E.E/pages/shared/loading.dart';
+import 'package:B.E.E/services/database.dart';
 
 class EditReportForm extends StatefulWidget {
   @override
@@ -102,7 +102,10 @@ class _EditReportFormState extends State<EditReportForm> {
         Expanded(
           flex: 1,
           child: IconButton(
-              icon: Icon(Icons.cancel),
+              icon: Icon(
+                Icons.cancel,
+                color: Colors.red[500],
+              ),
               onPressed: () {
                 String myKey = key;
                 print("Remove ${myKey} from the report form.");
