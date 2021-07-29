@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:save_pdf/pages/shared/loading.dart';
-import 'package:save_pdf/services/auth.dart';
-import 'package:save_pdf/pages/shared/constants.dart';
+import 'package:B.E.E/pages/shared/loading.dart';
+import 'package:B.E.E/services/auth.dart';
+import 'package:B.E.E/pages/shared/constants.dart';
 
 class Register extends StatefulWidget {
   final Function toggleView;
@@ -21,6 +21,9 @@ class _RegisterState extends State<Register> {
   // text field state
   String email = '';
   String password = '';
+  String firstName = '';
+  String lastName = '';
+
   String error = '';
 
   @override
@@ -36,7 +39,8 @@ class _RegisterState extends State<Register> {
               elevation: 0.0,
               title: Text('Sign up:'),
               actions: <Widget>[
-                FlatButton.icon(
+                ElevatedButton.icon(
+                  style: ElevatedButton.styleFrom(primary: Colors.redAccent),
                   onPressed: () {
                     widget.toggleView();
                   },
@@ -48,75 +52,102 @@ class _RegisterState extends State<Register> {
                     'Sign in',
                     style: TextStyle(color: appBarColor),
                   ),
-                )
+                ),
               ],
             ),
-            body: Container(
-              padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 50.0),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  children: <Widget>[
-                    SizedBox(
-                      height: boxSize,
-                    ),
-                    TextFormField(
-                      decoration:
-                          textIputDecoration.copyWith(hintText: 'Email'),
-                      validator: (val) => val.isEmpty ? 'Enter an email' : null,
-                      onChanged: (val) {
-                        email = val;
-                      },
-                    ),
-                    SizedBox(
-                      height: boxSize,
-                    ),
-                    TextFormField(
-                      decoration:
-                          textIputDecoration.copyWith(hintText: 'Password'),
-                      obscureText: true,
-                      validator: (val) => val.length <= 5
-                          ? 'Enter password 6+ chars long'
-                          : null,
-                      onChanged: (val) {
-                        password = val;
-                      },
-                    ),
-                    SizedBox(
-                      height: boxSize,
-                    ),
-                    RaisedButton(
-                      onPressed: () async {
-                        if (_formKey.currentState.validate()) {
-                          setState(() {
-                            isLoading = true;
-                          });
-                          print("Email: $email, Passowrd: $password");
-                          dynamic result = await _auth
-                              .registerWithEmailAndPassword(email, password);
-                          if (result == null) {
-                            setState(() {
-                              isLoading = false;
-                              error = 'Please supply a valid info';
-                            });
-                          }
-                        }
-                      },
-                      color: Colors.red[500],
-                      child: Text(
-                        'Register',
-                        style: TextStyle(color: Colors.white),
+            body: ListView(children: [
+              Container(
+                padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 50.0),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    children: <Widget>[
+                      SizedBox(
+                        height: boxSize,
                       ),
-                    ),
-                    SizedBox(height: boxSize),
-                    Text(
-                      error,
-                      style: TextStyle(color: Colors.red, fontSize: 14.0),
-                    )
-                  ],
+                      TextFormField(
+                        decoration:
+                            textIputDecoration.copyWith(hintText: 'Email'),
+                        validator: (val) =>
+                            val.isEmpty ? 'Enter an email' : null,
+                        onChanged: (val) {
+                          email = val;
+                        },
+                      ),
+                      SizedBox(
+                        height: boxSize,
+                      ),
+                      TextFormField(
+                        decoration:
+                            textIputDecoration.copyWith(hintText: 'Password'),
+                        obscureText: true,
+                        validator: (val) => val.length <= 5
+                            ? 'Enter password 6+ chars long'
+                            : null,
+                        onChanged: (val) {
+                          password = val;
+                        },
+                      ),
+                      SizedBox(
+                        height: boxSize,
+                      ),
+                      TextFormField(
+                        decoration:
+                            textIputDecoration.copyWith(hintText: 'First Name'),
+                        validator: (val) =>
+                            val.length < 0 ? 'Enter name' : null,
+                        onChanged: (val) {
+                          firstName = val;
+                        },
+                      ),
+                      SizedBox(
+                        height: boxSize,
+                      ),
+                      TextFormField(
+                        decoration:
+                            textIputDecoration.copyWith(hintText: 'Last Name'),
+                        validator: (val) =>
+                            val.length < 0 ? 'Enter name' : null,
+                        onChanged: (val) {
+                          lastName = val;
+                        },
+                      ),
+                      SizedBox(
+                        height: boxSize,
+                      ),
+                      ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                              primary: Colors.red[500]),
+                          onPressed: () async {
+                            if (_formKey.currentState.validate()) {
+                              setState(() {
+                                isLoading = true;
+                              });
+                              dynamic result =
+                                  await _auth.registerWithEmailAndPassword(
+                                      email, password, firstName, lastName);
+                              if (result == null) {
+                                setState(() {
+                                  isLoading = false;
+                                  error = 'Invalid info or email alredy exist';
+                                });
+                              }
+                            }
+                          },
+                          child: Text(
+                            'Register',
+                            style: TextStyle(color: Colors.white),
+                          )),
+                      SizedBox(height: boxSize),
+                      Text(
+                        error,
+                        style: TextStyle(color: Colors.red, fontSize: 14.0),
+                      )
+                    ],
+                  ),
                 ),
               ),
-            ),
+            ]),
           );
   }
 }

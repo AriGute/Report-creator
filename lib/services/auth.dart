@@ -1,8 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:save_pdf/pages/authenticate/authenticate.dart';
-import 'package:save_pdf/pages/models/user.dart';
-import 'package:save_pdf/services/database.dart';
+import 'package:B.E.E/pages/models/user.dart';
+import 'package:B.E.E/services/database.dart';
+
+/*
+google-site-verification=msLVjiAAuEWlGEn-jMPsouAS1N_YD1fxsKyC1CmyEhY
+barak.app
+*/
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -13,7 +16,12 @@ class AuthService {
 
   // create user obj based on Firebase User
   MyUser _userFromFirebaseUser(User user) {
-    return user != null ? MyUser(uid: user.uid) : null;
+    // print("user:  $user");
+    return user != null
+        ? MyUser(
+            uid: user.uid,
+          )
+        : null;
   }
 
   // auth change user stream
@@ -25,7 +33,6 @@ class AuthService {
   Future signInAnon() async {
     try {
       UserCredential result = await _auth.signInAnonymously();
-
       User user = result.user;
       return _userFromFirebaseUser(user);
     } catch (e) {
@@ -40,8 +47,6 @@ class AuthService {
       UserCredential result = await _auth.signInWithEmailAndPassword(
           email: email, password: password);
       User user = result.user;
-      // await DatabaseService(uid: user.uid).addReport();
-
       return _userFromFirebaseUser(user);
     } catch (e) {
       print(e.toString());
@@ -49,13 +54,22 @@ class AuthService {
   }
 
   //register with email & password
-  Future registerWithEmailAndPassword(String email, String password) async {
+  Future registerWithEmailAndPassword(
+      String email, String password, String firstName, String lastName) async {
     try {
-      UserCredential result = await _auth.createUserWithEmailAndPassword(
-          email: email, password: password);
-      User user = result.user;
-      // await DatabaseService(uid: user.uid).createUserReports();
-      return _userFromFirebaseUser(user);
+      List<String> signInMethods =
+          await _auth.fetchSignInMethodsForEmail(email);
+      if (signInMethods.isEmpty) {
+        UserCredential result = await _auth.createUserWithEmailAndPassword(
+            email: email, password: password);
+        User user = result.user;
+
+        await DatabaseService(uid: user.uid)
+            .setUserDetails(firstName, lastName, email);
+        await user.sendEmailVerification();
+        return _userFromFirebaseUser(user);
+      }
+      return null;
     } catch (e) {
       print(e.toString());
     }
