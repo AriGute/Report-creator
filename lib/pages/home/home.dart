@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:B.E.E/pages/create_assignment/assigment_list.dart';
 import 'package:B.E.E/pages/home/profile_bar.dart';
 import 'package:B.E.E/pages/home/drawer.dart';
 import 'package:B.E.E/pages/home/profile_Settings.dart';
@@ -61,7 +60,7 @@ class Home extends StatelessWidget {
             height: boxSize,
           ),
           Container(color: Colors.red[500], child: ProfileBar()),
-          Expanded(child: AssigmentList())
+          // Expanded(child: AssigmentList())
         ]),
         floatingActionButton: FloatingActionButton(
           onPressed: () {

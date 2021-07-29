@@ -51,6 +51,7 @@ class _CreatePdfState extends State<CreatePdf> {
   //  Split to report details(site name, date, etc) and all the rest(insperts/form attributes).
   Future _fillReport() async {
     doc = await DatabaseService().getReport(widget.ownerUid, widget.reportUid);
+    print(doc.data());
     String title = "";
     doc.data().forEach((key, value) {
       if (key == "date") {
@@ -86,9 +87,17 @@ class _CreatePdfState extends State<CreatePdf> {
       Map<String, String> details, List<String> attributes) async {
     final page = document.pages.add();
     final Size pageSize = page.getClientSize();
-    final PdfGrid grid = PdfGrid();
-    final Uint8List font = await _loadFont("lib/fonts/Alef-Regular.ttf");
-
+    Uint8List font = await _loadFont("lib/fonts/Alef-Regular.ttf");
+    for (int i = 0; i < 5; i++) {
+      if (font == null) {
+        font = await _loadFont("lib/fonts/Alef-Regular.ttf");
+      } else if (font != null) {
+        break;
+      } else {
+        print("Could not get font, abort after 5 attemts.");
+        return;
+      }
+    }
     // Create a PDF true type font object.
     final PdfFont pdfFont = PdfTrueTypeFont(font, 30);
     final PdfStringFormat pdfFormat = PdfStringFormat(

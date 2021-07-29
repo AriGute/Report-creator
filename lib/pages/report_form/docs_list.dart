@@ -28,9 +28,19 @@ class _DocsListState extends State<DocsList> {
     }
   }
 
+  dynamic lastItem;
+  Future waitForLast(List<Report> reportList) async {
+    lastItem = reportList.last;
+    return getWidget;
+  }
+
   @override
   Widget build(BuildContext context) {
     final reportList = Provider.of<List<Report>>(context);
-    return reportList == null ? Loading() : getWidget(reportList);
+    return reportList == null
+        ? Loading()
+        : reportList == null
+            ? Loading()
+            : getWidget(reportList);
   }
 }
