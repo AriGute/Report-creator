@@ -1,6 +1,7 @@
+import 'package:B.E.E/pages/shared/constants.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:B.E.E/pages/report_form/base_report.dart';
-import 'package:B.E.E/pages/shared/form_attributes.dart';
 import 'package:B.E.E/pages/models/assignment.dart';
 import 'package:B.E.E/pages/models/base_form.dart';
 import 'package:B.E.E/pages/shared/loading.dart';
@@ -17,10 +18,16 @@ class ReportForm extends StatefulWidget {
 
 class _ReportFormState extends State<ReportForm> {
   final AuthService _auth = AuthService();
+  final DatabaseService db = DatabaseService();
   BaseForm baseReport;
+  List<Widget> widgetList = [Loading()];
+
+  // for each subset item, if item is true then show its content
+  Map<String, bool> subSetCheck = {};
+  // subsets content
+  Map<String, dynamic> subsetContent = {};
 
   Widget reportExpend;
-  List<Widget> widgetList = [Loading()];
   Map<String, dynamic> report = {};
   bool readyToBeSave = true;
 
@@ -105,6 +112,7 @@ class _ReportFormState extends State<ReportForm> {
     );
   }
 
+  // Convert DateTime to string
   String dateFormat(DateTime date) {
     return date.day.toString() +
         "/" +
@@ -120,42 +128,66 @@ class _ReportFormState extends State<ReportForm> {
     report["weather"] = baseReport.weather;
   }
 
+  Widget makeCardWidget(String subject) {
+    return Column(
+      children: [
+        Container(
+            child: Align(
+                alignment: Alignment.center,
+                child: Text(
+                  subject,
+                  style: TextStyle(color: Colors.black),
+                ))),
+        TextFormField(
+          decoration: textIputDecoration.copyWith(hintText: "Empty."),
+          initialValue: report[subject],
+          maxLines: 3,
+          onChanged: (val) {
+            report[subject] = val;
+            if (val == "") {
+              report.remove(subject);
+            }
+            print(report);
+          },
+        )
+      ],
+    );
+  }
+
   Future setReport() async {
-    List<Widget> widgets = [];
-    // TODO: full report not save attributes
-    Map widgetInstructions = {};
-    Map instructions = {};
-    widgetList = [];
+    List<Widget> tempWidgetList = [];
     initBaseReport();
-    if (widget.assigment == null) {
-      /* 
-      Create full report(all widgets are available).
-      Get the full widget map and for each key create a representor(instructions[key] = true)
-      */
-      await FormAttributes()
-          .getWidgetMap()
-          .then((value) => value.forEach((key, value) {
-                instructions[key] = true;
-              }));
-    } else {
-      /*
-      Create report accordin to assigment instructions.
-      */
-      instructions = await DatabaseService(uid: AuthService().getUid())
-          .getAssignment(widget.assigment.uid);
-    }
-    for (String key in instructions.keys) {
-      // Get a map without the keys: 'date' and 'subject'(contain only widget names from form attributes)
-      if (key != "date" && key != "subject") {
-        report[key] = "empty";
-        widgetInstructions[key] = instructions[key];
-      }
-    }
-    widgets = await FormAttributes(valuesMap: report)
-        .getCustomWidgetList(widgetInstructions);
-    print("finish waiting");
+    Map<String, bool> tempSubSetsChecker = {};
+    Map<String, dynamic> tempSubSetsContent = {};
+
+    QuerySnapshot qss = await db.getForm();
+    qss.docs.forEach((item) {
+      Map<String, dynamic> subset = item.data();
+      Map<String, dynamic> content = subset["content"];
+      tempSubSetsChecker[subset["name"]] = false;
+      tempSubSetsContent[subset["name"]] = content;
+
+      List<Widget> contentWidgetList = [];
+      content.forEach((key, value) {
+        contentWidgetList.add(makeCardWidget(key));
+      });
+
+      tempWidgetList.add(ExpansionTile(
+        title: Row(children: [
+          Icon(Icons.align_horizontal_left),
+          Text(subset["name"])
+        ]),
+        maintainState: true,
+        onExpansionChanged: (val) => tempSubSetsChecker[subset["name"]] = val,
+        children: contentWidgetList,
+      ));
+      tempWidgetList.add(Divider(color: Colors.grey));
+    });
+
     setState(() {
-      widgetList = widgets;
+      subSetCheck = tempSubSetsChecker;
+      subsetContent = tempSubSetsContent;
+      widgetList = tempWidgetList;
     });
   }
 

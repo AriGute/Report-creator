@@ -60,6 +60,7 @@ class _SignInState extends State<SignIn> {
                         height: boxSize,
                       ),
                       TextFormField(
+                        keyboardType: TextInputType.emailAddress,
                         decoration:
                             textIputDecoration.copyWith(hintText: 'Email'),
                         validator: (val) =>

@@ -67,7 +67,7 @@ class DatabaseService {
     }
   }
 
-  // get report doc list from snapshot
+  // get snapshot of assignments.
   List<Assignment> _assigmentsListFromSnapShot(QuerySnapshot snapshot) {
     return snapshot.docs.map((doc) {
       return Assignment(
@@ -77,7 +77,7 @@ class DatabaseService {
     }).toList();
   }
 
-  // get reports that belong to exist user
+  // get assignments that belong to exist user
   Stream<List<Assignment>> assignments() {
     try {
       final CollectionReference reportsDb =
@@ -152,7 +152,7 @@ class DatabaseService {
   }
 
   // attatch assigment(map<string, bool> widget list indicator) to user(uid is the targeted user!, not the current user)
-  Future addAssigment(String uid, Map assigment, String subject) async {
+  Future addAssigmentOld(String uid, Map assigment, String subject) async {
     try {
       Map<String, dynamic> assigmentExtend = {};
       assigment.keys.forEach((key) {
@@ -185,6 +185,57 @@ class DatabaseService {
       print(e);
     }
   }
+
+  //////////////////  new form edit /////////////////
+
+  // add folder to the report form
+  Future addSubSet(String folderName, Map<String, String> folderContent) async {
+    await FirebaseFirestore.instance
+        .collection('ReportForm')
+        .add({'name': folderName, 'content': folderContent});
+  }
+
+  // add folder to the report form
+  Future addSubSetItem(String uid, Map<String, String> content) async {
+    await FirebaseFirestore.instance
+        .collection('ReportForm')
+        .doc(uid)
+        .update(content);
+  }
+
+  // add folder to the report form
+  Future deleteSubSet(String folderDocId) async {
+    await FirebaseFirestore.instance
+        .collection('ReportForm')
+        .doc(folderDocId)
+        .delete();
+  }
+
+  // get specific folder by folder doc id
+  Future<DocumentSnapshot> getSubSet(String folderUid) async {
+    final DocumentSnapshot rf = await FirebaseFirestore.instance
+        .collection('ReportForm')
+        .doc(folderUid)
+        .get();
+    return rf;
+  }
+
+  // get a querysnapshot of form
+  Future<QuerySnapshot> getForm() async {
+    final QuerySnapshot qss =
+        await FirebaseFirestore.instance.collection('ReportForm').get();
+    return qss;
+  }
+
+  // update report form
+  Future updateFolderContent(String uid, Map<String, dynamic> content) async {
+    await FirebaseFirestore.instance
+        .collection('ReportForm')
+        .doc(uid)
+        .set(content);
+  }
+
+  //////////////////  new form edit /////////////////
 
   // set report form attributes
   Future setReportForm(List reportForm) async {
