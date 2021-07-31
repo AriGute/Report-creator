@@ -1,12 +1,15 @@
-import 'package:B.E.E/pages/shared/constants.dart';
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:B.E.E/pages/report_form/base_report.dart';
 import 'package:B.E.E/pages/models/assignment.dart';
 import 'package:B.E.E/pages/models/base_form.dart';
 import 'package:B.E.E/pages/shared/loading.dart';
 import 'package:B.E.E/services/auth.dart';
 import 'package:B.E.E/services/database.dart';
+import 'package:B.E.E/pages/shared/constants.dart';
 
 class ReportForm extends StatefulWidget {
   final Assignment assigment;
@@ -18,7 +21,9 @@ class ReportForm extends StatefulWidget {
 
 class _ReportFormState extends State<ReportForm> {
   final AuthService _auth = AuthService();
-  final DatabaseService db = DatabaseService();
+  DatabaseService db;
+  List<XFile> imgs = [];
+  List<Widget> imgPreview = [];
   BaseForm baseReport;
   List<Widget> widgetList = [Loading()];
 
@@ -33,11 +38,17 @@ class _ReportFormState extends State<ReportForm> {
 
   void _saveFunction() {
     if (widget.assigment != null) {
-      DatabaseService().deletAssignments(_auth.getUid(), widget.assigment.uid);
+      db.deletAssignments(_auth.getUid(), widget.assigment.uid);
     }
     initBaseReport();
-    print("report :: " + report.toString());
-    DatabaseService(uid: _auth.getUid()).addReport(report);
+    print("report : " + report.toString());
+    if (imgs.isNotEmpty) {
+      List<String> imgPaths = [];
+      imgs.forEach((img) {
+        imgPaths.add(img.path);
+      });
+    }
+    db.addReport(report);
     Navigator.pop(context);
   }
 
@@ -154,6 +165,32 @@ class _ReportFormState extends State<ReportForm> {
     );
   }
 
+  void _pickFromLocal() async {
+    imgs = await ImagePicker().pickMultiImage();
+    if (imgs != null) {
+      print("image info: ");
+      print(imgs.length);
+
+      setState(() {
+        imgs.forEach((img) {
+          Image currentImg = Image.file(
+            File(img.path),
+            fit: BoxFit.scaleDown,
+            scale: 5,
+            filterQuality: FilterQuality.low,
+          );
+          imgPreview.add(Divider(
+            color: Colors.grey,
+          ));
+          imgPreview.add(currentImg);
+        });
+      });
+    } else {
+      print("image is null.");
+    }
+  }
+
+  // build report widget list based on data from db.
   Future setReport() async {
     List<Widget> tempWidgetList = [];
     initBaseReport();
@@ -191,9 +228,14 @@ class _ReportFormState extends State<ReportForm> {
     });
   }
 
+  void uploadTest() {
+    db.uploadImag(imgs[0].path);
+  }
+
   @override
   void initState() {
     super.initState();
+    db = DatabaseService(uid: _auth.getUid());
     baseReport = new BaseForm();
     reportExpend = Text("");
     setReport();
@@ -217,6 +259,20 @@ class _ReportFormState extends State<ReportForm> {
               alignment: Alignment.topRight,
               child: Column(children: widgetList)),
           reportExpend,
+          ExpansionTile(
+              title: Row(children: [Icon(Icons.art_track), Text("Photos")]),
+              maintainState: true,
+              children: imgPreview),
+          ElevatedButton(
+            onPressed: () => uploadTest(),
+            child: Icon(Icons.upload),
+            style: ElevatedButton.styleFrom(primary: Colors.red[500]),
+          ),
+          ElevatedButton(
+            onPressed: () => _pickFromLocal(),
+            child: Icon(Icons.add_photo_alternate),
+            style: ElevatedButton.styleFrom(primary: Colors.red[500]),
+          ),
           _saveBottun(),
         ]),
       ),

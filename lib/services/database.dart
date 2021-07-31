@@ -1,12 +1,17 @@
+import 'dart:io';
+
+import 'package:B.E.E/services/firebase_api.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:B.E.E/pages/models/assignment.dart';
 import 'package:B.E.E/pages/models/report.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 class DatabaseService {
   final String uid;
   final String reportFormUid = "EMFSTZ9oxm3rHGYD5rjd";
   DatabaseService({this.uid});
   final CollectionReference db = FirebaseFirestore.instance.collection('Users');
+  FirebaseStorage storage = FirebaseStorage.instanceFor();
   final FirebaseFirestore fb = FirebaseFirestore.instance;
 
   // create uniqe user docs library
@@ -187,6 +192,14 @@ class DatabaseService {
   }
 
   //////////////////  new form edit /////////////////
+
+  Future uploadImag(String path) async {
+    File file = File(path);
+    String fileName = path.split("/").last;
+    final String destenation = "uploads/$fileName";
+
+    FireBaseApi.uploadFile(destenation, file);
+  }
 
   // add folder to the report form
   Future addSubSet(String folderName, Map<String, String> folderContent) async {
