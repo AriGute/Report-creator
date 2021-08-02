@@ -2,7 +2,7 @@ import 'package:B.E.E/pages/report_form/edit_form/edit_form.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:B.E.E/pages/report_form/reports_viewer.dart';
+import 'package:B.E.E/pages/report_form/report_view/reports_viewer.dart';
 
 /*
 DrawerWidgets return a container to fill the drawer in the main page.

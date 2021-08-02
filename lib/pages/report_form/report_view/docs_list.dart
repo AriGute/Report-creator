@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:B.E.E/pages/report_form/report_tile.dart';
+import 'package:B.E.E/pages/report_form/report_view/report_tile.dart';
 import 'package:B.E.E/pages/models/report.dart';
 import 'package:B.E.E/pages/shared/loading.dart';
 import 'package:intl/intl.dart';
