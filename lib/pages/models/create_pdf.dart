@@ -21,7 +21,7 @@ class CreatePdf extends StatefulWidget {
 
 class _CreatePdfState extends State<CreatePdf> {
   DocumentSnapshot doc;
-  PdfDocument document = PdfDocument();
+  final PdfDocument document = PdfDocument();
   List<String> reportAttributes = [];
   Map<String, String> reportDetails = {};
 
@@ -98,6 +98,7 @@ class _CreatePdfState extends State<CreatePdf> {
         return;
       }
     }
+
     // Create a PDF true type font object.
     final PdfFont pdfFont = PdfTrueTypeFont(font, 30);
     final PdfStringFormat pdfFormat = PdfStringFormat(

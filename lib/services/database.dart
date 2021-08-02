@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:B.E.E/pages/models/assignment.dart';
 import 'package:B.E.E/pages/models/report.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/cupertino.dart';
 
 class DatabaseService {
   final String uid;
@@ -144,13 +145,19 @@ class DatabaseService {
   }
 
   // Add report to the current user
-  Future addReport(Map assigment) async {
+  Future<String> addReport(Map assigment) async {
     try {
       Map<String, dynamic> assigmentExtend = {};
       assigment.keys.forEach((key) {
         assigmentExtend[key] = assigment[key];
       });
-      await db.doc(uid).collection('Reports').add(assigmentExtend);
+      return await db
+          .doc(uid)
+          .collection('Reports')
+          .add(assigmentExtend)
+          .then((value) {
+        return value.id;
+      });
     } on Exception catch (e) {
       print(e);
     }
@@ -193,12 +200,52 @@ class DatabaseService {
 
   //////////////////  new form edit /////////////////
 
-  Future uploadImag(String path) async {
-    File file = File(path);
+  // Image _photosFromSnapShot(QuerySnapshot snapshot) {
+  //   try {
+  //     return snapshot.docs.map((doc) {
+  //       return Image.network(await storage.ref().child("uploads/$"));
+  //     }).toList();
+  //   } on Exception catch (e) {
+  //     print(e);
+  //     return null;
+  //   }
+  // }
+
+  Future<List<String>> _getFownloadLinks(List<Reference> refs) {
+    return Future.wait(refs.map((ref) => ref.getDownloadURL()).toList());
+  }
+
+  Future<List<String>> getPhotos(String reportUid) async {
+    try {
+      final String destenation = "uploads/$reportUid";
+      final ref = storage.ref(destenation);
+      final result = await ref.listAll();
+      final urls = await _getFownloadLinks(result.items);
+      return urls;
+    } on Exception catch (e) {
+      print(e);
+      return null;
+    }
+  }
+
+  // upload img to firebase and return its path.
+  Future<String> uploadImag(File file, String reportUid, String name) async {
+    final String destenation = "uploads/$reportUid/$name";
+    try {
+      return await FireBaseApi.uploadFile(destenation, file).then((tss) {
+        return tss.ref.fullPath;
+      });
+    } on Exception catch (e) {
+      print(e.toString());
+      return null;
+    }
+  }
+
+  Future<String> downloadImg(String path) async {
     String fileName = path.split("/").last;
     final String destenation = "uploads/$fileName";
 
-    FireBaseApi.uploadFile(destenation, file);
+    return FireBaseApi.downloadFileUrl(destenation);
   }
 
   // add folder to the report form

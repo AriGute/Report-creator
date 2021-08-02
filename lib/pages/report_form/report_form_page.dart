@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -10,6 +9,7 @@ import 'package:B.E.E/pages/shared/loading.dart';
 import 'package:B.E.E/services/auth.dart';
 import 'package:B.E.E/services/database.dart';
 import 'package:B.E.E/pages/shared/constants.dart';
+import 'package:sn_progress_dialog/sn_progress_dialog.dart';
 
 class ReportForm extends StatefulWidget {
   final Assignment assigment;
@@ -34,7 +34,36 @@ class _ReportFormState extends State<ReportForm> {
 
   Widget reportExpend;
   Map<String, dynamic> report = {};
+  List<String> reportPhotos = [];
+
   bool readyToBeSave = true;
+
+  Future _uploadImgs(String reportUid) async {
+    if (imgs.isNotEmpty) {
+      int numOfImgs = imgs.length;
+      int countUploads = 0;
+
+      ProgressDialog pd = ProgressDialog(context: context);
+      pd.show(max: numOfImgs, msg: 'Upload Photos, please wait..');
+
+      await Future.forEach(imgs, (img) async {
+        File file = File(img.path);
+        String name = img.path.split("/").last;
+        reportPhotos
+            .add(await db.uploadImag(file, reportUid, name).then((value) {
+          countUploads += 1;
+          print("uploaded img: " +
+              countUploads.toString() +
+              "/" +
+              numOfImgs.toString());
+        }));
+        pd.update(value: countUploads);
+      });
+      if (countUploads == numOfImgs) {
+        pd.close();
+      }
+    }
+  }
 
   void _saveFunction() {
     if (widget.assigment != null) {
@@ -42,14 +71,12 @@ class _ReportFormState extends State<ReportForm> {
     }
     initBaseReport();
     print("report : " + report.toString());
-    if (imgs.isNotEmpty) {
-      List<String> imgPaths = [];
-      imgs.forEach((img) {
-        imgPaths.add(img.path);
-      });
-    }
-    db.addReport(report);
-    Navigator.pop(context);
+
+    db.addReport(report).then((reportUid) async {
+      await _uploadImgs(reportUid).then((value) => Navigator.pop(context));
+    });
+
+    // Navigator.pop(context);
   }
 
   void _saveReport() {
@@ -166,6 +193,8 @@ class _ReportFormState extends State<ReportForm> {
   }
 
   void _pickFromLocal() async {
+    imgs = [];
+    imgPreview = [];
     imgs = await ImagePicker().pickMultiImage();
     if (imgs != null) {
       print("image info: ");
@@ -228,10 +257,6 @@ class _ReportFormState extends State<ReportForm> {
     });
   }
 
-  void uploadTest() {
-    db.uploadImag(imgs[0].path);
-  }
-
   @override
   void initState() {
     super.initState();
@@ -263,11 +288,6 @@ class _ReportFormState extends State<ReportForm> {
               title: Row(children: [Icon(Icons.art_track), Text("Photos")]),
               maintainState: true,
               children: imgPreview),
-          ElevatedButton(
-            onPressed: () => uploadTest(),
-            child: Icon(Icons.upload),
-            style: ElevatedButton.styleFrom(primary: Colors.red[500]),
-          ),
           ElevatedButton(
             onPressed: () => _pickFromLocal(),
             child: Icon(Icons.add_photo_alternate),

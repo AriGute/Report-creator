@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:B.E.E/pages/report_form/docs_list.dart';
+import 'package:B.E.E/pages/report_form/report_view/docs_list.dart';
 import 'package:B.E.E/services/auth.dart';
 import 'package:B.E.E/services/database.dart';
 

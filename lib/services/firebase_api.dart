@@ -11,4 +11,13 @@ class FireBaseApi {
       print(e.toString());
     }
   }
+
+  static Future<String> downloadFileUrl(String destenation) async {
+    try {
+      final ref = FirebaseStorage.instance.ref(destenation);
+      return ref.getDownloadURL();
+    } on FirebaseException catch (e) {
+      print(e.toString());
+    }
+  }
 }
