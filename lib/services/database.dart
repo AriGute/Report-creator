@@ -211,6 +211,27 @@ class DatabaseService {
   //   }
   // }
 
+  Future deletePhotos(String reportUid) async {
+    try {
+      // Reference ref = storage.ref("uploads/$uid");
+      final String destenation = "uploads/$reportUid";
+      final ref = storage.ref(destenation);
+      final result = await ref.listAll();
+      result.items.forEach((imgRef) {
+        imgRef.delete();
+      });
+      print("ref path: " + ref.fullPath);
+      ref.delete();
+    } on Exception catch (e) {
+      print("Exeption while trying to delete photos: " + e.toString());
+    }
+  }
+  // void deletePhotos(List<String> urls) {
+  //   urls.forEach((url) {
+  //     storage.refFromURL(url).delete();
+  //   });
+  // }
+
   Future<List<String>> _getFownloadLinks(List<Reference> refs) {
     return Future.wait(refs.map((ref) => ref.getDownloadURL()).toList());
   }
