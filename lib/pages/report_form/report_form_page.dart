@@ -44,7 +44,7 @@ class _ReportFormState extends State<ReportForm> {
       int countUploads = 0;
 
       ProgressDialog pd = ProgressDialog(context: context);
-      pd.show(max: numOfImgs, msg: 'Upload Photos, please wait..');
+      pd.show(max: numOfImgs, msg: 'Upload Photos..');
 
       await Future.forEach(imgs, (img) async {
         File file = File(img.path);

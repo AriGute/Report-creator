@@ -1,54 +1,30 @@
 import 'dart:io';
 import 'dart:typed_data';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:open_file/open_file.dart';
 import 'package:B.E.E/pages/shared/loading.dart';
 import 'package:B.E.E/services/database.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
+import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:syncfusion_flutter_pdf/pdf.dart';
+import 'package:pdf/pdf.dart';
+import 'package:pdf/widgets.dart' as pw;
+import 'package:flutter/services.dart';
 
 class CreatePdf extends StatefulWidget {
   final String reportUid;
   final String ownerUid;
   CreatePdf(this.ownerUid, this.reportUid);
-
   @override
   _CreatePdfState createState() => _CreatePdfState();
 }
 
 class _CreatePdfState extends State<CreatePdf> {
+  final DatabaseService db = DatabaseService();
+
   DocumentSnapshot doc;
-  final PdfDocument document = PdfDocument();
   List<String> reportAttributes = [];
   Map<String, String> reportDetails = {};
 
-  Future<void> _saveAndLunchFile(List<int> bytes, String fileName) async {
-    final path = (await getApplicationDocumentsDirectory()).path;
-    final file = File("${path}/${fileName}");
-    await file.writeAsBytes(bytes, flush: true);
-    final results = OpenFile.open('${path}/${fileName}');
-  }
-
-  Future<void> _createFile() async {
-    String date = reportDetails['date'];
-    if (date != null) {
-      date = date.replaceAll('/', '.');
-    }
-    String siteName = reportDetails['siteName'];
-    if (siteName != null) {
-      String fileName = siteName + ' ' + date + '.pdf';
-
-      List<int> bytes = document.save();
-      document.dispose();
-      _saveAndLunchFile(bytes, fileName);
-      Navigator.pop(context);
-    }
-  }
-
-  //  Split to report details(site name, date, etc) and all the rest(insperts/form attributes).
   Future _fillReport() async {
     doc = await DatabaseService().getReport(widget.ownerUid, widget.reportUid);
     print(doc.data());
@@ -67,97 +43,113 @@ class _CreatePdfState extends State<CreatePdf> {
       }
     });
     _buildReport(reportDetails, reportAttributes);
-    setState(() {});
-  }
-
-  // Return the center length is needed as correspond to string lenght of the page.
-  double centerPage(String text, Size pageSize) {
-    return pageSize.width / 2 - 7 * text.length;
+    Navigator.pop(context);
   }
 
   Future<Uint8List> _loadFont(String path) async {
     ByteData data = await rootBundle.load(path);
     Uint8List font =
         data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
+
     return font;
   }
 
-  // Build a list of widget that look like a doc file
   void _buildReport(
       Map<String, String> details, List<String> attributes) async {
-    final page = document.pages.add();
-    final Size pageSize = page.getClientSize();
-    Uint8List font = await _loadFont("lib/fonts/Alef-Regular.ttf");
-    for (int i = 0; i < 5; i++) {
-      if (font == null) {
-        font = await _loadFont("lib/fonts/Alef-Regular.ttf");
-      } else if (font != null) {
-        break;
-      } else {
-        print("Could not get font, abort after 5 attemts.");
-        return;
-      }
-    }
+    final pdf = pw.Document();
+    final Uint8List regularFontData =
+        await _loadFont("lib/fonts/Alef-Regular.ttf");
+    final ttf = pw.Font.ttf(regularFontData.buffer.asByteData());
+    final Uint8List boldFontData = await _loadFont("lib/fonts/Alef-Bold.ttf");
+    final ttfBold = pw.Font.ttf(boldFontData.buffer.asByteData());
 
-    // Create a PDF true type font object.
-    final PdfFont pdfFont = PdfTrueTypeFont(font, 30);
-    final PdfStringFormat pdfFormat = PdfStringFormat(
-        textDirection: PdfTextDirection.rightToLeft,
-        alignment: PdfTextAlignment.left,
-        paragraphIndent: 10);
+    // page content
+    List<pw.Widget> pageContent = [];
 
-    PdfColor lightBlue = PdfColor(51, 171, 249);
-    PdfColor black = PdfColor(0, 0, 0);
+    // add headline
+    pageContent.add(await buildHeadLine(reportDetails["date"]));
 
-    // Add subject (site name).
-    page.graphics.drawString("Site name: " + details["siteName"], pdfFont,
-        format: pdfFormat,
-        brush: PdfSolidBrush(black),
-        bounds: Rect.fromLTWH(
-            centerPage("Site name: " + details["siteName"], pageSize),
-            50,
-            pageSize.width,
-            100));
+    // add site name
+    pageContent.add(pw.Container(
+        child: pw.Text(
+            reportDetails["siteName"].replaceFirst(reportDetails["siteName"][0],
+                reportDetails["siteName"][0].toUpperCase()),
+            style: pw.TextStyle(fontSize: 30, font: ttfBold)),
+        alignment: pw.Alignment.topCenter));
 
-    // Add log to the page.
-    String logo = "Logo: " + details["logo"];
-    page.graphics.drawString(logo, pdfFont,
-        format: pdfFormat,
-        brush: PdfSolidBrush(black),
-        bounds: Rect.fromLTWH(0, 0, pageSize.width / 2, 50));
+    // add table title
+    pageContent.add(pw.Container(
+        decoration: pw.BoxDecoration(color: PdfColors.grey200),
+        child: pw.Text("Technical details",
+            style: pw.TextStyle(fontSize: 15, font: ttfBold)),
+        alignment: pw.Alignment.topCenter));
 
-    // Add date to the page.
-    page.graphics.drawString(
-        details["date"], PdfStandardFont(PdfFontFamily.helvetica, 20),
-        format: pdfFormat,
-        brush: PdfSolidBrush(black),
-        bounds: Rect.fromLTWH(pageSize.width - 100, 0, pageSize.width, 50));
+    // table for report attribute
+    List<pw.TableRow> tableRows = [];
+    pw.Table table = pw.Table(children: tableRows);
 
-    // Output each report attribute to the page.
-    int counter = 0;
-    double offset = 150;
-    reportAttributes.forEach((item) {
-      // Draw line between report attributes.
-      page.graphics.drawLine(
-          PdfPen(PdfColor(0, 0, 0), width: 2),
-          Offset(0, offset + 50 * counter.toDouble()),
-          Offset(pageSize.width, offset + 50 * counter.toDouble()));
-
-      // Report attribute.
-      String attribute = item;
-      page.graphics.drawString(attribute, pdfFont,
-          format: pdfFormat,
-          brush: PdfSolidBrush(black),
-          bounds: Rect.fromLTWH(0, offset + 50 * counter.toDouble(),
-              pageSize.width, offset + 50 * counter.toDouble()));
-      counter++;
+    int attributeIndex = 0;
+    attributes.forEach((item) {
+      tableRows.add(buildParagraph(item, ttf, attributeIndex));
+      attributeIndex++;
     });
+    pageContent.add(table);
 
-    // Draw line at the end of the page.
-    page.graphics.drawLine(
-        PdfPen(PdfColor(0, 0, 0), width: 2),
-        Offset(0, offset + 50 * counter.toDouble()),
-        Offset(pageSize.width, offset + 50 * counter.toDouble()));
+    // add to page
+    pdf.addPage(pw.MultiPage(
+        build: (context) => pageContent,
+        footer: (context) {
+          final text = "Page ${context.pageNumber} of ${context.pagesCount}";
+          return pw.Container(
+              alignment: pw.Alignment.centerRight, child: pw.Text(text));
+        }));
+
+    final String fileName = reportDetails['siteName'] + '.pdf';
+    final List<int> bytes = await pdf.save();
+    final path = (await getApplicationDocumentsDirectory()).path;
+    final file = File("$path/$fileName");
+    await file.writeAsBytes(bytes, flush: true);
+    await OpenFile.open(file.path);
+  }
+
+  Future<pw.SvgImage> buildImg() async {
+    String str = await rootBundle.loadString("lib/assets/logo.png");
+    return pw.SvgImage(svg: str);
+  }
+
+  Future<pw.Header> buildHeadLine(String date) async {
+    // load B.E.E logo
+    pw.Image logo = pw.Image(
+        pw.MemoryImage(
+          (await rootBundle.load('lib/assets/logo.png')).buffer.asUint8List(),
+        ),
+        height: 50.0,
+        width: 50.0);
+    pw.Header header = pw.Header(
+        child: pw.Row(children: [
+          pw.Center(child: logo),
+          pw.Text(" B.E.E",
+              style: pw.TextStyle(fontSize: 24, color: PdfColors.white)),
+          pw.SizedBox(width: 9 * PdfPageFormat.cm),
+          pw.Container(
+            child: pw.Text(" " + date,
+                style: pw.TextStyle(fontSize: 24, color: PdfColors.white)),
+          )
+        ]),
+        decoration: pw.BoxDecoration(color: PdfColors.red));
+    return header;
+  }
+
+  pw.TableRow buildParagraph(String text, pw.Font font, int index) {
+    List<String> splitText = text.split(':');
+    pw.TableRow tableRow = pw.TableRow(children: [
+      pw.Center(
+          child:
+              pw.Text(index.toString() + ")", style: pw.TextStyle(font: font))),
+      pw.Center(child: pw.Text(splitText[0], style: pw.TextStyle(font: font))),
+      pw.Center(child: pw.Text(splitText[1], style: pw.TextStyle(font: font)))
+    ]);
+    return tableRow;
   }
 
   @override
@@ -168,7 +160,6 @@ class _CreatePdfState extends State<CreatePdf> {
 
   @override
   Widget build(BuildContext context) {
-    _createFile();
     return AlertDialog(
       content: Container(width: 10.0, height: 100, child: Loading()),
     );

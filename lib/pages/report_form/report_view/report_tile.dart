@@ -1,12 +1,18 @@
-import 'package:B.E.E/pages/report_form/report_view/photo_viewer.dart';
-import 'package:flutter/material.dart';
 import 'package:B.E.E/pages/models/create_pdf.dart';
+import 'package:flutter/material.dart';
+import 'package:B.E.E/pages/report_form/report_view/photo_viewer.dart';
+import 'package:B.E.E/pages/waiting%20to%20be%20deleted/create_pdf2.dart';
 import 'package:B.E.E/pages/models/report.dart';
 import 'package:B.E.E/services/database.dart';
 
 class ReportTile extends StatelessWidget {
   final Report report;
+  final DatabaseService db = DatabaseService();
   ReportTile({this.report});
+
+  Future<List<String>> getPhotosUrls() async {
+    return await DatabaseService().getPhotos(report.reportUid);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -19,8 +25,9 @@ class ReportTile extends StatelessWidget {
                 actions: [
                   ElevatedButton(
                     onPressed: () {
-                      DatabaseService()
-                          .deletReport(report.ownerUid, report.reportUid);
+                      db.deletReport(report.ownerUid, report.reportUid);
+                      db.deletePhotos(report.reportUid);
+                      Navigator.pop(context);
                       Navigator.pop(context);
                     },
                     child: Text("Yes"),
@@ -43,6 +50,7 @@ class ReportTile extends StatelessWidget {
                 title: Text(report.name + " " + report.date),
                 actions: [
                   ElevatedButton(
+                    // open report in pdf
                     onPressed: () {
                       showDialog(
                           context: context,
@@ -53,6 +61,7 @@ class ReportTile extends StatelessWidget {
                     style: ElevatedButton.styleFrom(primary: Colors.red[500]),
                   ),
                   ElevatedButton(
+                      // open the report related photos
                       onPressed: () {
                         showDialog(
                             context: context,
@@ -62,9 +71,11 @@ class ReportTile extends StatelessWidget {
                       style:
                           ElevatedButton.styleFrom(primary: Colors.red[500])),
                   ElevatedButton(
+                      // delete report and photos.
                       onPressed: () {
-                        // _removeButton();
-                        Navigator.pop(context);
+                        print("delete");
+                        _removeButton();
+                        // Navigator.pop(context);
                       },
                       child: Icon(Icons.delete_forever),
                       style: ElevatedButton.styleFrom(primary: Colors.red[500]))
