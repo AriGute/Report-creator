@@ -51,16 +51,15 @@ class Home extends StatelessWidget {
                 onPressed: () => _showSettingsPanel()),
           ],
         ),
-        drawer: Drawer(
-            child: DrawerWidgets(
-          homeContext: context,
-        )),
+        // drawer: Drawer(
+        //     child: DrawerWidgets(
+        //   homeContext: context,
+        // )),
         body: Column(children: <Widget>[
           SizedBox(
             height: boxSize,
           ),
           Container(color: Colors.red[500], child: ProfileBar()),
-          // Expanded(child: AssigmentList())
         ]),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
