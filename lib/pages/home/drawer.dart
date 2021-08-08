@@ -61,8 +61,8 @@ class _DrawerWidgetsState extends State<DrawerWidgets> {
         backgroundColor: Colors.red[500],
       ),
       body: ListView(
-        children: [Container(child: Column(children: setWidgets(userDetails)))],
-      ),
+          // children: [Container(child: Column(children: setWidgets(userDetails)))],
+          children: []),
     );
   }
 }
