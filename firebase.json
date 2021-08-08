@@ -1,7 +1,7 @@
 {
   "hosting": {
     "site": "barak-e-e",
-    "public": "build\web",
+    "public": "web",
     "ignore": [
       "firebase.json",
       "**/.*",
