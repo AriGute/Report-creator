@@ -57,12 +57,13 @@ class _DrawerWidgetsState extends State<DrawerWidgets> {
   Widget build(BuildContext context) {
     final Map userDetails = Provider.of<DocumentSnapshot>(context).data();
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.red[500],
-      ),
-      body: ListView(
-          // children: [Container(child: Column(children: setWidgets(userDetails)))],
-          children: []),
-    );
+        appBar: AppBar(
+          backgroundColor: Colors.red[500],
+        ),
+        body: ListView(
+          children: [
+            Container(child: Column(children: setWidgets(userDetails)))
+          ],
+        ));
   }
 }
