@@ -34,7 +34,7 @@
 /build/
 
 # Dont ignor this files
-!./build/web
+!/build/web
 
 # Web related
 lib/generated_plugin_registrant.dart
