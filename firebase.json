@@ -1,6 +1,5 @@
 {
   "hosting": {
-    "site": "barak-e-e",
     "public": "build/web",
     "ignore": [
       "firebase.json",
