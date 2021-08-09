@@ -1,4 +1,3 @@
-import 'package:B.E.E/pages/shared/loading.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -23,11 +22,8 @@ class MyApp extends StatelessWidget {
       value: AuthService().user,
       initialData: null,
       child: MaterialApp(
-          home: Scaffold(
-        body: Loading(),
-      )
-          // Wrapper(),
-          ),
+        home: Wrapper(),
+      ),
     );
   }
 }
