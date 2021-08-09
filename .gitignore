@@ -31,7 +31,7 @@
 .packages
 .pub-cache/
 .pub/
-/build/
+/build/*
 
 # Dont ignor this files
 !/build/web
