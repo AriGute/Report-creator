@@ -1,3 +1,4 @@
+import 'package:B.E.E/pages/shared/loading.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -21,7 +22,10 @@ class MyApp extends StatelessWidget {
     return StreamProvider<MyUser>.value(
       value: AuthService().user,
       initialData: null,
-      child: MaterialApp(home: Scaffold()
+      child: MaterialApp(
+          home: Scaffold(
+        body: Loading(),
+      )
           // Wrapper(),
           ),
     );
