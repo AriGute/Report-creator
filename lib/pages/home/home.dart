@@ -34,22 +34,24 @@ class Home extends StatelessWidget {
         backgroundColor: Colors.white,
         appBar: AppBar(
           backgroundColor: Colors.red[500],
-          title: Expanded(
-            child: Text(
-              'Main Page:',
-              style: TextStyle(color: Colors.white),
-            ),
+          title:
+              // Expanded(
+              //   child:
+              Text(
+            'Main Page:',
+            style: TextStyle(color: Colors.white),
           ),
+          // ),
           centerTitle: false,
           elevation: 0.0,
-          actions: <Widget>[
-            IconButton(
-                icon: Icon(
-                  Icons.settings,
-                  color: Colors.white,
-                ),
-                onPressed: () => _showSettingsPanel()),
-          ],
+          // actions: <Widget>[
+          //   IconButton(
+          //       icon: Icon(
+          //         Icons.settings,
+          //         color: Colors.white,
+          //       ),
+          //       onPressed: () => _showSettingsPanel()),
+          // ],
         ),
         // drawer: Drawer(
         //     child: DrawerWidgets(
