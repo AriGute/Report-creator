@@ -44,14 +44,14 @@ class Home extends StatelessWidget {
           // ),
           centerTitle: false,
           elevation: 0.0,
-          // actions: <Widget>[
-          //   IconButton(
-          //       icon: Icon(
-          //         Icons.settings,
-          //         color: Colors.white,
-          //       ),
-          //       onPressed: () => _showSettingsPanel()),
-          // ],
+          actions: <Widget>[
+            IconButton(
+                icon: Icon(
+                  Icons.settings,
+                  color: Colors.white,
+                ),
+                onPressed: () => _showSettingsPanel()),
+          ],
         ),
         // drawer: Drawer(
         //     child: DrawerWidgets(
