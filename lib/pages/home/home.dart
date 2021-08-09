@@ -38,7 +38,7 @@ class Home extends StatelessWidget {
               // Expanded(
               //   child:
               Text(
-            'Main Page test 1:',
+            'Main Page:',
             style: TextStyle(color: Colors.white),
           ),
           // ),
