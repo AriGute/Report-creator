@@ -2,9 +2,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:B.E.E/pages/models/user.dart';
-import 'package:B.E.E/pages/wrapper.dart';
-import 'package:B.E.E/services/auth.dart';
+import 'package:CreateReport/pages/models/user.dart';
+import 'package:CreateReport/pages/wrapper.dart';
+import 'package:CreateReport/services/auth.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

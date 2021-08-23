@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:B.E.E/pages/models/base_form.dart';
-import 'package:B.E.E/pages/shared/constants.dart';
+import 'package:CreateReport/pages/models/base_form.dart';
+import 'package:CreateReport/pages/shared/constants.dart';
 
 class BaseReport extends StatefulWidget {
   BaseForm report;
@@ -60,42 +60,6 @@ class _BaseReportState extends State<BaseReport> {
         )));
   }
 
-  Widget _getLogo() {
-    return Row(
-      children: <Widget>[
-        Expanded(
-          flex: 1,
-          child: Center(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(8.0, 0, 8.0, 0),
-              child: DropdownButton<String>(
-                isExpanded: true,
-                hint: Text(widget.report.logo),
-                items:
-                    <String>['Solar power', 'ברק', 'נופר'].map((String value) {
-                  return new DropdownMenuItem<String>(
-                    value: value,
-                    child: new Text(value),
-                  );
-                }).toList(),
-                onChanged: (pick) {
-                  print(pick);
-                  setState(() {
-                    widget.report.logo = pick;
-                  });
-                },
-              ),
-            ),
-          ),
-        ),
-        Expanded(
-          flex: 0,
-          child: Center(child: Text(':לוגו')),
-        ),
-      ],
-    );
-  }
-
   Widget _setWeather() {
     return Row(
       children: <Widget>[
@@ -150,7 +114,7 @@ class _BaseReportState extends State<BaseReport> {
             child: customTextFormField('שם האתר', (val) {
           widget.report.siteName = val;
         })),
-        Expanded(child: _getLogo())
+       
       ]),
       Divider(color: Colors.grey)
     ]);

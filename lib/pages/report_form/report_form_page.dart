@@ -2,13 +2,13 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:B.E.E/pages/report_form/base_report.dart';
-import 'package:B.E.E/pages/models/assignment.dart';
-import 'package:B.E.E/pages/models/base_form.dart';
-import 'package:B.E.E/pages/shared/loading.dart';
-import 'package:B.E.E/services/auth.dart';
-import 'package:B.E.E/services/database.dart';
-import 'package:B.E.E/pages/shared/constants.dart';
+import 'package:CreateReport/pages/report_form/base_report.dart';
+import 'package:CreateReport/pages/models/assignment.dart';
+import 'package:CreateReport/pages/models/base_form.dart';
+import 'package:CreateReport/pages/shared/loading.dart';
+import 'package:CreateReport/services/auth.dart';
+import 'package:CreateReport/services/database.dart';
+import 'package:CreateReport/pages/shared/constants.dart';
 import 'package:sn_progress_dialog/sn_progress_dialog.dart';
 
 class ReportForm extends StatefulWidget {

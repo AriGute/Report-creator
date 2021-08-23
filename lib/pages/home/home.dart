@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:B.E.E/pages/home/profile_bar.dart';
-import 'package:B.E.E/pages/home/drawer.dart';
-import 'package:B.E.E/pages/home/profile_Settings.dart';
-import 'package:B.E.E/pages/report_form/report_form_page.dart';
-import 'package:B.E.E/pages/shared/constants.dart';
-import 'package:B.E.E/services/auth.dart';
-import 'package:B.E.E/services/database.dart';
+import 'package:CreateReport/pages/home/profile_bar.dart';
+import 'package:CreateReport/pages/home/drawer.dart';
+import 'package:CreateReport/pages/home/profile_Settings.dart';
+import 'package:CreateReport/pages/report_form/report_form_page.dart';
+import 'package:CreateReport/pages/shared/constants.dart';
+import 'package:CreateReport/services/auth.dart';
+import 'package:CreateReport/services/database.dart';
 import 'package:provider/provider.dart';
 
 class Home extends StatelessWidget {

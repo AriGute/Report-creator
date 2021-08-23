@@ -1,4 +1,4 @@
-name: B.E.E
+name: CreateReport
 description: A new Flutter project.
 
 # The following line prevents the package from being accidentally published to
@@ -18,12 +18,12 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.7.0 <3.0.0"
+  sdk: '>=2.7.0 <3.0.0'
 
 flutter_icons:
-  android: "barak_logo"
+  android: 'logo'
   ios: true
-  image_path: "lib/assets/logo.png"
+  image_path: 'lib/assets/logo.png'
 
 dependencies:
   flutter:
@@ -41,7 +41,7 @@ dependencies:
   image: ^3.0.2
   sn_progress_dialog: ^1.0.2
   pdf: ^3.4.2
-  
+
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
@@ -55,7 +55,6 @@ dev_dependencies:
 
 # The following section is specific to Flutter.
 flutter:
-
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
@@ -64,8 +63,6 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - lib/assets/logo.png
-    - lib/assets/logo_transparent.png
-    
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

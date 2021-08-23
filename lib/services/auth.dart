@@ -1,11 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:B.E.E/pages/models/user.dart';
-import 'package:B.E.E/services/database.dart';
+import 'package:CreateReport/pages/models/user.dart';
+import 'package:CreateReport/services/database.dart';
 
-/*
-google-site-verification=msLVjiAAuEWlGEn-jMPsouAS1N_YD1fxsKyC1CmyEhY
-barak.app
-*/
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;

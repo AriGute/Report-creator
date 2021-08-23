@@ -1,9 +1,8 @@
-import 'package:B.E.E/pages/models/create_pdf.dart';
+import 'package:CreateReport/services/create_pdf.dart';
 import 'package:flutter/material.dart';
-import 'package:B.E.E/pages/report_form/report_view/photo_viewer.dart';
-import 'package:B.E.E/pages/waiting%20to%20be%20deleted/create_pdf2.dart';
-import 'package:B.E.E/pages/models/report.dart';
-import 'package:B.E.E/services/database.dart';
+import 'package:CreateReport/pages/report_form/report_view/photo_viewer.dart';
+import 'package:CreateReport/pages/models/report.dart';
+import 'package:CreateReport/services/database.dart';
 
 class ReportTile extends StatelessWidget {
   final Report report;

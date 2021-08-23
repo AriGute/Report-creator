@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:B.E.E/pages/authenticate/authenticate.dart';
-import 'package:B.E.E/pages/models/user.dart';
+import 'package:CreateReport/pages/authenticate/authenticate.dart';
+import 'package:CreateReport/pages/models/user.dart';
 
 import 'home/home.dart';
 

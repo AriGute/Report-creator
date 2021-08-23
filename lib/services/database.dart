@@ -1,9 +1,9 @@
 import 'dart:io';
 
-import 'package:B.E.E/services/firebase_api.dart';
+import 'package:CreateReport/services/firebase_api.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:B.E.E/pages/models/assignment.dart';
-import 'package:B.E.E/pages/models/report.dart';
+import 'package:CreateReport/pages/models/assignment.dart';
+import 'package:CreateReport/pages/models/report.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:B.E.E/pages/shared/loading.dart';
-import 'package:B.E.E/services/auth.dart';
-import 'package:B.E.E/pages/shared/constants.dart';
+import 'package:CreateReport/pages/shared/loading.dart';
+import 'package:CreateReport/services/auth.dart';
+import 'package:CreateReport/pages/shared/constants.dart';
 
 class Register extends StatefulWidget {
   final Function toggleView;

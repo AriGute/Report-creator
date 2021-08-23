@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'dart:typed_data';
-import 'package:B.E.E/pages/shared/loading.dart';
-import 'package:B.E.E/services/database.dart';
+import 'package:CreateReport/pages/shared/loading.dart';
+import 'package:CreateReport/services/database.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:open_file/open_file.dart';
@@ -128,7 +128,7 @@ class _CreatePdfState extends State<CreatePdf> {
     pw.Header header = pw.Header(
         child: pw.Row(children: [
           pw.Center(child: logo),
-          pw.Text(" B.E.E",
+          pw.Text(" Report Creator",
               style: pw.TextStyle(fontSize: 24, color: PdfColors.white)),
           pw.SizedBox(width: 9 * PdfPageFormat.cm),
           pw.Container(
