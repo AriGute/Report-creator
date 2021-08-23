@@ -1,16 +1,40 @@
-# save_pdf
+# Data-Security-Project
 
-A new Flutter project.
+Secured messanger app for data security course.
+
+## The Project:
+
+The project is about a secured P2P messenger app, every message is encrypt end-to-end using Diffie-Hellman for swapping keys.
+Each connected user get a token after authentication from the server.
+Message without a token cant get to its destination.
+
+Demonstration video: https://youtu.be/dNhx2mX61gk
+
+## Project Purpose
+
+**The project must meet a number of conditions:**
+
+- Able to send and recive messages
+- Each message is encrypted end-to-end
+- User authentication
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+1. Run KDCgui.
+2. Enter user name and password and click "Add new User" (need to add at least 2 users).
+3. In KDCgui click "Start Server".
+4. Run guiLayOut(one for each user).
+5. Enter username and password in each client and click "Connect".
+6. At this point bouth clients should recive a message "Connected to remote host..".
+7. Send and recive messages.
 
-A few resources to get you started if this is your first Flutter project:
+## Authors
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+- **Ariel Gueta**
+- **Joaffzie**
+- **lidorz51**
+- **Yarin Edri**
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## License
+
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
