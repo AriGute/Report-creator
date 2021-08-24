@@ -1,0 +1,4 @@
+#Tue Aug 24 03:26:24 IDT 2021
+base.0=A\:\\Tools\\OriginalWork\\save_pdf\\build\\app\\intermediates\\dex\\release\\minifyReleaseWithR8\\classes.dex
+path.0=classes.dex
+renamed.0=classes.dex

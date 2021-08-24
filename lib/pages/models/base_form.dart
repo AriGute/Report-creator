@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class BaseForm {
   DateTime selectedDate = DateTime.now();
   String weather = "בהיר";
-  String logo = "ברק";
+  String logo = "";
   String siteName = "";
   String testerName = "";
 }

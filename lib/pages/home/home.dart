@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:save_pdf/pages/home/docs_list.dart';
-import 'package:save_pdf/pages/home/report_form/report_form_page.dart';
-import 'package:save_pdf/pages/home/settings_form.dart';
-import 'package:save_pdf/pages/models/report.dart';
-import 'package:save_pdf/services/auth.dart';
-import 'package:save_pdf/services/database.dart';
+import 'package:CreateReport/pages/home/profile_bar.dart';
+import 'package:CreateReport/pages/home/drawer.dart';
+import 'package:CreateReport/pages/home/profile_Settings.dart';
+import 'package:CreateReport/pages/report_form/report_form_page.dart';
+import 'package:CreateReport/pages/shared/constants.dart';
+import 'package:CreateReport/services/auth.dart';
+import 'package:CreateReport/services/database.dart';
 import 'package:provider/provider.dart';
 
 class Home extends StatelessWidget {
   final AuthService _auth = AuthService();
-
-  Color appBarTextColor = Colors.white;
 
   @override
   Widget build(BuildContext context) {
@@ -18,57 +17,53 @@ class Home extends StatelessWidget {
       showModalBottomSheet(
           context: context,
           builder: (context) {
-            return Container(
-              padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 60.0),
-              child: SettingsForm(),
-            );
+            return profileSettings(_auth, context);
           });
     }
 
-    return StreamProvider<List<Report>>.value(
-      value: DatabaseService(uid: _auth.getUid()).docs(),
-      initialData: [],
+    return MultiProvider(
+      providers: [
+        StreamProvider(
+            create: (BuildContext context) =>
+                DatabaseService(uid: _auth.getUid()).assignments()),
+        StreamProvider(
+            create: (BuildContext context) =>
+                DatabaseService(uid: _auth.getUid()).getCurrentUserDetails())
+      ],
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
           backgroundColor: Colors.red[500],
-          title: Text(
-            'Main Page:',
-            style: TextStyle(color: appBarTextColor),
+          title: Expanded(
+            child: Text(
+              'Main Page:',
+              style: TextStyle(color: Colors.white),
+            ),
           ),
           centerTitle: false,
           elevation: 0.0,
           actions: <Widget>[
-            FlatButton.icon(
-              onPressed: () async {
-                await _auth.signOut();
-              },
-              icon: Icon(
-                Icons.person,
-                color: appBarTextColor,
-              ),
-              label: Text(
-                'Log out',
-                style: TextStyle(color: appBarTextColor),
-              ),
-            ),
-            FlatButton.icon(
-              onPressed: () => _showSettingsPanel(),
-              icon: Icon(
-                Icons.settings,
-                color: appBarTextColor,
-              ),
-              label: Text(
-                'Settings',
-                style: TextStyle(color: appBarTextColor),
-              ),
-            )
+            IconButton(
+                icon: Icon(
+                  Icons.settings,
+                  color: Colors.white,
+                ),
+                onPressed: () => _showSettingsPanel()),
           ],
         ),
-        body: DocsList(),
+        drawer: Drawer(
+            child: DrawerWidgets(
+          homeContext: context,
+        )),
+        body: Column(children: <Widget>[
+          SizedBox(
+            height: boxSize,
+          ),
+          Container(color: Colors.red[500], child: ProfileBar()),
+          // Expanded(child: AssigmentList())
+        ]),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
-            print("add report");
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => ReportForm()),

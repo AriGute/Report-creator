@@ -1,16 +1,18 @@
-# save_pdf
+# Report Creator
 
-A new Flutter project.
+Mobile app for create and edit report form, fill reports, attach images, upload or download and export as pdf.
 
-## Getting Started
+Manager can edit the form and add or remove tasks, worker can select sections in the report to fill as needed, attach images and upload it to the database.
 
-This project is a starting point for a Flutter application.
+## Project Purpose
 
-A few resources to get you started if this is your first Flutter project:
+- Create a tool for real life problem.
+- Get experience and test new technologies.
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+## App Features
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- Authenticate user via email and password (with email verification).
+- Authorization hierarchy (Managar and Worker).
+- Real time DataBase with Firestore db.
+- File storate with FireBase Storage.
+- View reports, related images and export as pdf.

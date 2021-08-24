@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:save_pdf/pages/authenticate/register.dart';
-import 'package:save_pdf/pages/authenticate/sign_in.dart';
+import 'package:CreateReport/pages/authenticate/register.dart';
+import 'package:CreateReport/pages/authenticate/sign_in.dart';
 
 class Authenticate extends StatefulWidget {
   @override
