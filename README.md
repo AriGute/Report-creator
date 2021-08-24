@@ -18,5 +18,5 @@ Manager can edit the form and add or remove tasks, worker can select sections in
 - View reports, related images and export as pdf.
 
 ## Build
-* APK can be found in : /build/app/outputs/apk/release/app-release.apk
+* APK can be found  [here](https://github.com/AriGute/Report-creator/tree/main/build/app/outputs/apk/release)
 * Or download the projkect and run `flutter build apk`.
