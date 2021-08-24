@@ -19,4 +19,4 @@ Manager can edit the form and add or remove tasks, worker can select sections in
 
 ## Build
 * APK can be found  [here](https://github.com/AriGute/Report-creator/tree/main/build/app/outputs/apk/release)
-* Or download the projkect and run `flutter build apk`.
+* Or download the project and run `flutter build apk`.
