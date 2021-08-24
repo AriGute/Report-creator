@@ -13,7 +13,7 @@ Demo [video](https://youtu.be/PRO33RbUhfs)
 
 ## App Features
 
-- Authenticate user via email and password (with email verification).
+- Authenticate user via email and password.
 - Authorization hierarchy (Managar and Worker).
 - Real time DataBase with Firestore db.
 - File storate with FireBase Storage.
