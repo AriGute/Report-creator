@@ -16,3 +16,7 @@ Manager can edit the form and add or remove tasks, worker can select sections in
 - Real time DataBase with Firestore db.
 - File storate with FireBase Storage.
 - View reports, related images and export as pdf.
+
+## Build
+* APK can be found in : /build/app/outputs/apk/release/app-release.apk
+* Or download the projkect and run `flutter build apk`.
