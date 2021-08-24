@@ -1,6 +1,8 @@
 # Report Creator
 
-Mobile app for edit and create report form, fill reports, attach images, upload or download and export as pdf. Manager can edit the form and add or remove tasks. Worker can select sections in the report to fill as needed, attach images and upload it to FireBase storage.
+Mobile app for create and edit report form, fill reports, attach images, upload or download and export as pdf.
+
+Manager can edit the form and add or remove tasks, worker can select sections in the report to fill as needed, attach images and upload it to the database.
 
 ## Project Purpose
 
